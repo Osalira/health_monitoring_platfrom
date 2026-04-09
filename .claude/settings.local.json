@@ -9,7 +9,10 @@
       "Bash(pnpm test:*)",
       "Bash(pnpm build:*)",
       "Bash(pnpm:*)",
-      "Bash(docker compose:*)"
+      "Bash(docker compose:*)",
+      "Bash(PGPASSWORD=postgres psql:*)",
+      "Bash(PGPASSWORD=postgres dropdb -h localhost -p 5452 -U postgres --if-exists t1d_command_center)",
+      "Bash(PGPASSWORD=postgres createdb -h localhost -p 5452 -U postgres t1d_command_center)"
     ]
   }
 }

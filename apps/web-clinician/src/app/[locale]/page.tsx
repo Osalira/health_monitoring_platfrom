@@ -2,40 +2,44 @@ import { Suspense } from 'react';
 import { useTranslations } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { Skeleton } from '@t1d/ui';
-import { getDashboardKpis } from '@/lib/queries/dashboard';
-import { getPatientRoster } from '@/lib/queries/patients';
+import { getDashboardKpis, type DashboardKpis } from '@/lib/queries/dashboard';
+import { getPatientRoster, type PatientRosterResult } from '@/lib/queries/patients';
 import { KpiCards } from '@/components/dashboard/kpi-cards';
 import { PatientRoster } from '@/components/dashboard/patient-roster';
 import { RosterFilters } from '@/components/dashboard/roster-filters';
+import { Pagination } from '@/components/dashboard/pagination';
 
 export default async function DashboardPage({
   params,
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ search?: string; risk?: string }>;
+  searchParams: Promise<{ search?: string; risk?: string; page?: string }>;
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
 
   const filters = await searchParams;
-  const [kpis, patients] = await Promise.all([
+  const page = filters.page ? parseInt(filters.page, 10) : 1;
+
+  const [kpis, result] = await Promise.all([
     getDashboardKpis(),
     getPatientRoster({
       search: filters.search,
       riskTier: filters.risk,
+      page,
     }),
   ]);
 
-  return <DashboardContent kpis={kpis} patients={patients} />;
+  return <DashboardContent kpis={kpis} result={result} />;
 }
 
 function DashboardContent({
   kpis,
-  patients,
+  result,
 }: {
-  kpis: Awaited<ReturnType<typeof getDashboardKpis>>;
-  patients: Awaited<ReturnType<typeof getPatientRoster>>;
+  kpis: DashboardKpis;
+  result: PatientRosterResult;
 }) {
   const t = useTranslations('dashboard');
 
@@ -55,7 +59,14 @@ function DashboardContent({
         <Suspense fallback={<Skeleton className="h-10 w-full" />}>
           <RosterFilters />
         </Suspense>
-        <PatientRoster patients={patients} />
+        <PatientRoster patients={result.rows} />
+        <Suspense fallback={null}>
+          <Pagination
+            page={result.page}
+            totalPages={result.totalPages}
+            total={result.total}
+          />
+        </Suspense>
       </div>
     </div>
   );

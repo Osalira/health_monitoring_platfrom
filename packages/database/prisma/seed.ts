@@ -133,6 +133,7 @@ async function seedStory(
     ...story.labs.map((o) => ({
       patientId: patient.id,
       type: o.type as 'LAB',
+      subType: o.subType,
       value: o.value,
       unit: o.unit,
       observedAt: o.observedAt,

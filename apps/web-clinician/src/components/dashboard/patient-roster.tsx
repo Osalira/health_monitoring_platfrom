@@ -61,7 +61,7 @@ export function PatientRoster({ patients }: PatientRosterProps) {
                 {formatHbA1c(patient.latestHbA1c)}
               </td>
               <td className="px-4 py-3">
-                <SyncStatus lastSyncAt={patient.lastSyncAt} />
+                <SyncStatus lastSyncAt={patient.lastSyncAt?.toISOString() ?? null} />
               </td>
               <td className="px-4 py-3">
                 {patient.openTaskCount > 0 ? (

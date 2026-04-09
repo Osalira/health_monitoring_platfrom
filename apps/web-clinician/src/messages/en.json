@@ -64,7 +64,11 @@
       "lastSync": "Last Sync",
       "tasks": "Tasks",
       "alerts": "Alerts",
-      "searchPlaceholder": "Search patients…"
+      "searchPlaceholder": "Search patients…",
+      "totalCount": "{count, plural, one {# patient} other {# patients}}",
+      "pageOf": "Page {page} of {totalPages}",
+      "prevPage": "Previous page",
+      "nextPage": "Next page"
     },
     "riskTiers": {
       "ALL": "All",

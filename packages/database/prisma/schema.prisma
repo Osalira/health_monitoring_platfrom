@@ -188,6 +188,7 @@ model Observation {
   patientId       String
   deviceId        String?
   type            ObservationType
+  subType         String?
   value           Float
   unit            String
   observedAt      DateTime
@@ -202,6 +203,7 @@ model Observation {
 
   @@index([patientId])
   @@index([patientId, type])
+  @@index([patientId, type, subType])
   @@index([observedAt])
   @@map("observations")
 }

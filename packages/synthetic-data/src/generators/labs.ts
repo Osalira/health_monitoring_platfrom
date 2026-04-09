@@ -3,6 +3,7 @@ import { type Rng, randGaussian, randInt } from '../rng';
 
 export interface GeneratedLab {
   type: 'LAB';
+  subType: string;
   value: number;
   unit: string;
   observedAt: Date;
@@ -24,6 +25,7 @@ export function generateLabs(
   const daysAgo = randInt(rng, 7, 60);
   labs.push({
     type: 'LAB',
+    subType: 'HbA1c',
     value: Math.round(randGaussian(rng, archetype.hba1c, 0.3) * 10) / 10,
     unit: '%',
     observedAt: new Date(startDate.getTime() + (archetype.historyDays - daysAgo) * 24 * 60 * 60 * 1000),
@@ -38,6 +40,7 @@ export function generateLabs(
       : archetype.hba1c + randGaussian(rng, 0, 0.3);
     labs.push({
       type: 'LAB',
+      subType: 'HbA1c',
       value: Math.round(Math.max(4.5, prevHba1c) * 10) / 10,
       unit: '%',
       observedAt: new Date(startDate.getTime()),
