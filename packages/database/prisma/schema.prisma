@@ -1,0 +1,338 @@
+// T1D Command Center — Prisma Schema
+// Source of truth: docs/architecture/002-domain-model.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ──────────────────────────────────────────────────────────────
+// Enums
+// ──────────────────────────────────────────────────────────────
+
+enum UserRole {
+  CLINICIAN
+  EDUCATOR
+  ADMIN
+  PATIENT
+  CAREGIVER
+}
+
+enum DeviceType {
+  CGM
+  PUMP
+  METER
+  ACTIVITY
+  OTHER
+}
+
+enum DeviceStatus {
+  ACTIVE
+  INACTIVE
+  DISCONNECTED
+}
+
+enum ObservationType {
+  GLUCOSE
+  INSULIN
+  CARBS
+  ACTIVITY
+  LAB
+  QUESTIONNAIRE
+  HEART_RATE
+  OTHER
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum AlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+enum AlertStatus {
+  ACTIVE
+  ACKNOWLEDGED
+  RESOLVED
+  DISMISSED
+}
+
+enum RiskTier {
+  LOW
+  MODERATE
+  HIGH
+  CRITICAL
+}
+
+enum SummaryKind {
+  VISIT_PREP
+  WEEKLY_REVIEW
+  DISCHARGE
+  OTHER
+}
+
+enum AuditAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  ACCESS
+  GENERATE
+}
+
+enum ConsentType {
+  DATA_SHARING
+  RESEARCH
+  DEVICE_ACCESS
+}
+
+enum ConsentStatus {
+  GRANTED
+  REVOKED
+  PENDING
+}
+
+// ──────────────────────────────────────────────────────────────
+// Core entities
+// ──────────────────────────────────────────────────────────────
+
+/// Authenticated actor in the system.
+model User {
+  id               String   @id @default(uuid())
+  email            String   @unique
+  displayName      String
+  role             UserRole
+  localePreference String   @default("en")
+  themePreference  String   @default("light")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  assignedTasks    Task[]             @relation("TaskAssignedTo")
+  createdTasks     Task[]             @relation("TaskCreatedBy")
+  auditEvents      AuditEvent[]       @relation("AuditActor")
+  generatedSummaries GeneratedSummary[] @relation("SummaryGeneratedBy")
+
+  @@map("users")
+}
+
+/// Patient whose data is reviewed in the system.
+model Patient {
+  id              String    @id @default(uuid())
+  externalRef     String?   @unique
+  firstName       String
+  lastName        String
+  birthDate       DateTime
+  sexAtBirth      String?
+  diagnosisDate   DateTime?
+  primaryLanguage String    @default("en")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  devices         Device[]
+  observations    Observation[]
+  tasks           Task[]
+  alerts          Alert[]
+  riskAssessments RiskAssessment[]
+  summaries       GeneratedSummary[]
+  auditEvents     AuditEvent[]       @relation("AuditPatient")
+  consents        ConsentRecord[]
+
+  @@index([lastName, firstName])
+  @@map("patients")
+}
+
+/// Device source or wearable.
+model Device {
+  id           String       @id @default(uuid())
+  patientId    String
+  type         DeviceType
+  manufacturer String?
+  model        String?
+  sourceKey    String?      @unique
+  status       DeviceStatus @default(ACTIVE)
+  lastSyncedAt DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  // Relations
+  patient      Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  observations Observation[]
+
+  @@index([patientId])
+  @@index([status])
+  @@map("devices")
+}
+
+/// Canonical observation: glucose readings, lab results, or other measurable events.
+model Observation {
+  id              String          @id @default(uuid())
+  patientId       String
+  deviceId        String?
+  type            ObservationType
+  value           Float
+  unit            String
+  observedAt      DateTime
+  sourceType      String?
+  sourcePayloadId String?
+  metadata        Json?
+  createdAt       DateTime        @default(now())
+
+  // Relations
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  device  Device? @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+
+  @@index([patientId])
+  @@index([patientId, type])
+  @@index([observedAt])
+  @@map("observations")
+}
+
+/// Clinician or educator action item.
+model Task {
+  id               String       @id @default(uuid())
+  patientId        String
+  title            String
+  description      String?
+  status           TaskStatus   @default(OPEN)
+  priority         TaskPriority @default(MEDIUM)
+  assignedToUserId String?
+  createdByUserId  String?
+  dueAt            DateTime?
+  completedAt      DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  // Relations
+  patient    Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  assignedTo User?   @relation("TaskAssignedTo", fields: [assignedToUserId], references: [id], onDelete: SetNull)
+  createdBy  User?   @relation("TaskCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@index([patientId])
+  @@index([status])
+  @@index([assignedToUserId])
+  @@map("tasks")
+}
+
+/// Surfaced issue requiring attention.
+model Alert {
+  id             String        @id @default(uuid())
+  patientId      String
+  type           String
+  severity       AlertSeverity
+  status         AlertStatus   @default(ACTIVE)
+  triggeredAt    DateTime      @default(now())
+  acknowledgedAt DateTime?
+  explanation    String?
+  metadata       Json?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  // Relations
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([patientId])
+  @@index([status])
+  @@index([severity])
+  @@map("alerts")
+}
+
+/// Explainable risk assessment output.
+model RiskAssessment {
+  id                String   @id @default(uuid())
+  patientId         String
+  score             Float
+  tier              RiskTier
+  factors           Json
+  computedAt        DateTime @default(now())
+  modelVersion      String
+  sourceWindowStart DateTime
+  sourceWindowEnd   DateTime
+  createdAt         DateTime @default(now())
+
+  // Relations
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([patientId])
+  @@index([computedAt])
+  @@map("risk_assessments")
+}
+
+/// Visit prep or other generated structured summary.
+model GeneratedSummary {
+  id                String      @id @default(uuid())
+  patientId         String
+  kind              SummaryKind
+  content           Json
+  sourceSnapshot    Json?
+  generatedAt       DateTime    @default(now())
+  generatedByUserId String?
+  createdAt         DateTime    @default(now())
+
+  // Relations
+  patient     Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  generatedBy User?   @relation("SummaryGeneratedBy", fields: [generatedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([patientId])
+  @@index([kind])
+  @@map("generated_summaries")
+}
+
+/// Sensitive access or mutation event.
+model AuditEvent {
+  id           String      @id @default(uuid())
+  actorUserId  String?
+  patientId    String?
+  action       AuditAction
+  resourceType String
+  resourceId   String?
+  metadata     Json?
+  occurredAt   DateTime    @default(now())
+
+  // Relations
+  actor   User?    @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  patient Patient? @relation("AuditPatient", fields: [patientId], references: [id], onDelete: SetNull)
+
+  @@index([actorUserId])
+  @@index([patientId])
+  @@index([occurredAt])
+  @@index([action])
+  @@map("audit_events")
+}
+
+/// Patient privacy or sharing consent state.
+model ConsentRecord {
+  id          String        @id @default(uuid())
+  patientId   String
+  consentType ConsentType
+  status      ConsentStatus @default(PENDING)
+  grantedAt   DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relations
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@index([patientId])
+  @@index([consentType, status])
+  @@map("consent_records")
+}

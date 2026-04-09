@@ -310,3 +310,58 @@
   4. `pnpm build` — 14/14
 - Expected result:
   - Zero errors across all commands
+
+## Stage 5 - Database and domain implementation
+
+### Check 1 - Prisma schema is valid
+
+- What to check: Schema parses without errors
+- How to check:
+  1. Run `pnpm --filter @t1d/database db:generate`
+- Expected result:
+  - Prisma client generates successfully
+  - No schema validation errors
+
+### Check 2 - All 10 core entities are modeled
+
+- What to check: Schema contains all documented entities
+- How to check:
+  1. Open `packages/database/prisma/schema.prisma`
+  2. Verify models: User, Patient, Device, Observation, Task, Alert, RiskAssessment, GeneratedSummary, AuditEvent, ConsentRecord
+  3. Verify enums: UserRole, DeviceType, DeviceStatus, ObservationType, TaskStatus, TaskPriority, AlertSeverity, AlertStatus, RiskTier, SummaryKind, AuditAction, ConsentType, ConsentStatus
+- Expected result:
+  - All 10 models present with documented fields
+  - 13 enums matching domain requirements
+  - Proper relations and foreign keys
+
+### Check 3 - Database client exports work
+
+- What to check: Package exports are correct
+- How to check:
+  1. Run `pnpm --filter @t1d/database test`
+- Expected result:
+  - 3 tests pass: PrismaClient export, singleton instance, singleton identity
+
+### Check 4 - Migration readiness (requires Postgres)
+
+- What to check: Schema can be pushed to a real database
+- How to check:
+  1. Start a local PostgreSQL instance
+  2. Set `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/t1d_command_center`
+  3. Run `pnpm --filter @t1d/database db:push`
+  4. Run `pnpm --filter @t1d/database db:seed`
+- Expected result:
+  - Schema pushes cleanly
+  - Seed creates 3 users, 1 patient, 1 device, 1 task
+  - `pnpm --filter @t1d/database db:studio` shows populated tables
+
+### Check 5 - Quality gates pass
+
+- What to check: All CI commands pass with database package
+- How to check:
+  1. `pnpm lint` — 14/14
+  2. `pnpm typecheck` — 14/14
+  3. `pnpm test` — 14/14 (31 real tests: 15 auth + 10 UI + 3 i18n + 3 database)
+  4. `pnpm build` — 14/14
+- Expected result:
+  - Zero errors across all commands

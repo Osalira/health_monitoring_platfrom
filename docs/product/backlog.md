@@ -71,12 +71,12 @@
 
 ## Epic 5 - Database and domain implementation
 
-- [ ] Prisma configured
-- [ ] PostgreSQL connected
-- [ ] Core entities modeled
-- [ ] Migrations working
-- [ ] Seed entrypoints added
-- [ ] Database package established
+- [x] Prisma configured (v6.19, schema.prisma in packages/database/prisma)
+- [x] PostgreSQL connected (DATABASE_URL from .env, singleton client)
+- [x] Core entities modeled (10 models: User, Patient, Device, Observation, Task, Alert, RiskAssessment, GeneratedSummary, AuditEvent, ConsentRecord)
+- [x] Migrations working (prisma migrate dev / db:push ready)
+- [x] Seed entrypoints added (prisma/seed.ts with demo users + sample patient/device/task)
+- [x] Database package established (singleton PrismaClient export, type re-exports)
 
 ## Epic 6 - Synthetic data system
 

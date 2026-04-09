@@ -208,3 +208,41 @@ Clinical apps are information-dense. A persistent sidebar provides stable naviga
 - mobile gets a compact horizontal nav bar
 - sidebar width (w-56) is consistent and predictable
 - adding new nav items is a single-line change to the NAV_ITEMS array
+
+## 2026-04-09 - Prisma in packages/database with UUID primary keys
+
+Status: Accepted
+
+### Decision
+
+Place Prisma schema in `packages/database/prisma/schema.prisma`. Use UUIDs (`@default(uuid())`) for all primary keys. Export a singleton `PrismaClient` from `packages/database/src/index.ts`.
+
+### Why
+
+UUIDs are safe for distributed systems, avoid auto-increment leakage, and are consistent across all tables. The singleton pattern prevents connection pool exhaustion during development HMR cycles. Placing Prisma in the database package keeps the schema co-located with the client.
+
+### Consequences
+
+- all entities use string UUIDs as IDs
+- no auto-increment sequences to manage
+- UUID generation happens at the database level
+- singleton is cached on `globalThis` in development mode
+- consumers import `prisma` from `@t1d/database`
+
+## 2026-04-09 - Json fields for semi-structured domain data
+
+Status: Accepted
+
+### Decision
+
+Use Prisma `Json` type for `factors` (RiskAssessment), `metadata` (Observation, Alert, AuditEvent), `content` and `sourceSnapshot` (GeneratedSummary). These fields hold semi-structured data that varies by context.
+
+### Why
+
+These fields are inherently polymorphic — risk factors, observation metadata, and summary content have different shapes depending on the source or computation. Modeling each variant as a separate column would be premature and fragile. Json fields provide flexibility while keeping the schema clean.
+
+### Consequences
+
+- these fields are not queryable via SQL column operations (use Postgres JSONB operators or filter in application code)
+- type safety for Json field contents comes from application-level Zod validation (not Prisma)
+- schema is simpler and more extensible
