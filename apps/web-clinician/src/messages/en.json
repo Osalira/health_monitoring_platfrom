@@ -1,0 +1,55 @@
+{
+  "common": {
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "confirm": "Confirm",
+      "close": "Close",
+      "back": "Back",
+      "next": "Next"
+    },
+    "states": {
+      "loading": "Loading…",
+      "error": "Something went wrong",
+      "empty": "No data available"
+    },
+    "labels": {
+      "search": "Search",
+      "filter": "Filter",
+      "settings": "Settings",
+      "profile": "Profile",
+      "logout": "Log out",
+      "language": "Language",
+      "theme": "Theme"
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "patients": "Patients",
+    "settings": "Settings",
+    "help": "Help"
+  },
+  "dashboard": {
+    "title": "T1D Command Center",
+    "subtitle": "Clinician Dashboard",
+    "description": "Monitor your patient population, review risk levels, and prepare for visits.",
+    "kpi": {
+      "totalPatients": "Total Patients",
+      "highRisk": "High Risk",
+      "pendingTasks": "Pending Tasks",
+      "recentAlerts": "Recent Alerts"
+    }
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "toggle": "Toggle theme"
+  },
+  "locale": {
+    "switchTo": "Switch language",
+    "en": "English",
+    "fr": "Français"
+  }
+}

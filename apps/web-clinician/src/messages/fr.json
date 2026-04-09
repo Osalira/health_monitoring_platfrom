@@ -1,0 +1,55 @@
+{
+  "common": {
+    "actions": {
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "confirm": "Confirmer",
+      "close": "Fermer",
+      "back": "Retour",
+      "next": "Suivant"
+    },
+    "states": {
+      "loading": "Chargement…",
+      "error": "Une erreur est survenue",
+      "empty": "Aucune donnée disponible"
+    },
+    "labels": {
+      "search": "Rechercher",
+      "filter": "Filtrer",
+      "settings": "Paramètres",
+      "profile": "Profil",
+      "logout": "Déconnexion",
+      "language": "Langue",
+      "theme": "Thème"
+    }
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "patients": "Patients",
+    "settings": "Paramètres",
+    "help": "Aide"
+  },
+  "dashboard": {
+    "title": "Centre de contrôle DT1",
+    "subtitle": "Tableau de bord clinicien",
+    "description": "Surveillez votre population de patients, examinez les niveaux de risque et préparez vos visites.",
+    "kpi": {
+      "totalPatients": "Total patients",
+      "highRisk": "Risque élevé",
+      "pendingTasks": "Tâches en attente",
+      "recentAlerts": "Alertes récentes"
+    }
+  },
+  "theme": {
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système",
+    "toggle": "Changer le thème"
+  },
+  "locale": {
+    "switchTo": "Changer de langue",
+    "en": "English",
+    "fr": "Français"
+  }
+}

@@ -95,3 +95,76 @@ Vitest is fast, TypeScript-native, and compatible with the ESM setup. It avoids 
 - test scripts are consistent across packages
 - packages without tests still participate in `pnpm test` without failure
 - Playwright remains the choice for E2E tests (separate concern)
+
+## 2026-04-09 - Tailwind v3 with shadcn/ui CSS variables
+
+Status: Accepted
+
+### Decision
+
+Use Tailwind CSS v3 (not v4) with the shadcn/ui CSS custom property theming approach. Theme tokens are defined as CSS variables in `globals.css` (`:root` for light, `.dark` for dark) and referenced via `tailwind.config.ts` extensions.
+
+### Why
+
+shadcn/ui components are authored for Tailwind v3. Using v3 avoids adaptation friction and maintains compatibility with the shadcn/ui ecosystem. The CSS variable approach enables dark mode via the `class` strategy with `next-themes`.
+
+### Consequences
+
+- all colors use semantic tokens (`bg-background`, `text-foreground`, etc.)
+- dark mode works via `.dark` class on `<html>`
+- components from `packages/ui` automatically adapt to both themes
+- if upgrading to Tailwind v4 later, migrate CSS variables to `@theme` directives
+
+## 2026-04-09 - Translation dictionaries in app, not package
+
+Status: Accepted
+
+### Decision
+
+Place EN/FR message dictionaries in `apps/web-clinician/src/messages/` rather than in `packages/i18n`. The `@t1d/i18n` package holds only locale utilities (type guards, constants).
+
+### Why
+
+Dictionaries contain app-specific copy (dashboard labels, nav items). Putting them in the app keeps them close to the UI that uses them. If a second app needs shared strings, extract a shared dictionary layer then.
+
+### Consequences
+
+- `packages/i18n` remains lightweight and reusable
+- each app owns its own translations
+- no cross-app translation coupling
+
+## 2026-04-09 - transpilePackages for @t1d/ui
+
+Status: Accepted
+
+### Decision
+
+Use Next.js `transpilePackages: ['@t1d/ui']` to compile the UI package source directly rather than pre-building it.
+
+### Why
+
+This avoids maintaining a separate build step for the UI package during development. Next.js compiles the TSX source directly from `packages/ui/src/`. The `tsc` build script serves as a type-checking gate only.
+
+### Consequences
+
+- faster dev loop (no watch build for packages/ui)
+- `packages/ui` content paths must be included in the app's `tailwind.config.ts`
+- package can only be consumed by bundler-aware consumers (fine for this monorepo)
+
+## 2026-04-09 - next-intl v4 with App Router middleware routing
+
+Status: Accepted
+
+### Decision
+
+Use next-intl v4 with middleware-based locale routing. URL structure: `/{locale}/...` (e.g., `/en/`, `/fr/`). Middleware redirects `/` to `/{defaultLocale}`. App uses `[locale]` route segment.
+
+### Why
+
+This is the recommended next-intl v4 pattern for App Router. It provides locale-aware navigation, server-side locale detection, and clean URL structure.
+
+### Consequences
+
+- all routes are prefixed with locale
+- locale-aware `Link`, `useRouter`, `usePathname` from `@/i18n/navigation`
+- `setRequestLocale()` must be called in every page/layout for static rendering

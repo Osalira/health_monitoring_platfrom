@@ -133,32 +133,80 @@
 
 - What to check: Default English locale displays correctly
 - How to check:
-  1. Start the app
-  2. Open the default route in English
+  1. Run `pnpm --filter @t1d/web-clinician dev`
+  2. Open `http://localhost:3000` (redirects to `/en`)
+  3. Review dashboard page: header title, subtitle, description, KPI cards
 - Expected result:
-  - Navigation, headings, and controls display in English
+  - All text displays in English
+  - Header shows "T1D Command Center"
+  - KPI cards show "Total Patients", "High Risk", "Pending Tasks", "Recent Alerts"
+  - No untranslated keys visible (no `dashboard.title` raw keys)
 
 ### Check 2 - French locale renders
 
 - What to check: French locale displays correctly
 - How to check:
-  1. Switch locale to French
-  2. Review shell and sample page
+  1. Click the language icon (globe) in the header
+  2. Select "Français"
+  3. URL changes to `/fr`
+  4. Review all visible text
 - Expected result:
-  - Navigation, headings, controls, and empty states display in French
+  - Header shows "Centre de contrôle DT1"
+  - KPI cards show "Total patients", "Risque élevé", "Tâches en attente", "Alertes récentes"
   - No visible mixed untranslated English copy
+  - Description text is fully in French
 
 ### Check 3 - Light and dark mode render correctly
 
-- What to check: Theme switching works
+- What to check: Theme switching works and persists
 - How to check:
-  1. Toggle theme in the app shell
-  2. Refresh the page
-  3. Review buttons, cards, text, tables, and focus styles
+  1. Click the sun/moon icon in the header
+  2. Select "Dark" — page background changes to dark blue-black
+  3. Select "Light" — page background changes to white
+  4. Select "System" — follows OS preference
+  5. Refresh the page — theme persists
+  6. Review: header, cards, badges, text contrast
 - Expected result:
-  - Theme changes successfully
-  - Theme persists or behaves as documented
-  - No unreadable contrast or broken UI appears
+  - Theme changes immediately (no flash on toggle)
+  - All text remains readable in both themes
+  - Cards, badges, borders all use appropriate colors
+  - No hardcoded colors breaking in dark mode
+
+### Check 4 - Theme and locale controls are accessible
+
+- What to check: Controls work with keyboard
+- How to check:
+  1. Tab to the language switcher — should show focus ring
+  2. Press Enter/Space — dropdown opens
+  3. Arrow keys navigate options
+  4. Enter selects
+  5. Repeat for theme toggle
+- Expected result:
+  - Visible focus indicators on all interactive elements
+  - Dropdown menus open/close with keyboard
+  - `aria-label` present on icon-only buttons ("Toggle theme", "Switch language")
+
+### Check 5 - UI primitives render in both themes
+
+- What to check: Shared components from @t1d/ui work correctly
+- How to check:
+  1. In light mode, inspect KPI cards — border visible, text readable
+  2. Switch to dark mode — cards have dark background, light text
+  3. Check badges — contrast sufficient in both themes
+- Expected result:
+  - All semantic token-based components adapt automatically
+  - No broken or invisible elements in either theme
+
+### Check 6 - Quality gates pass
+
+- What to check: All CI-equivalent commands pass
+- How to check:
+  1. `pnpm lint` — 14/14
+  2. `pnpm typecheck` — 14/14
+  3. `pnpm test` — 14/14 (13 real tests: 10 UI + 3 i18n)
+  4. `pnpm build` — 14/14 (Next.js builds with SSG)
+- Expected result:
+  - Zero errors across all commands
 
 ## Stage 4 - App shell
 

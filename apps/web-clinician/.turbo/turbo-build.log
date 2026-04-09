@@ -1,4 +1,36 @@
 
 > @t1d/web-clinician@0.0.0 build C:\Users\osali\OneDrive\Bureau\ConsultantITBusiness\healthplatform\t1d-command-center\apps\web-clinician
-> tsc --noEmit
+> next build
+
+   ▲ Next.js 15.5.15
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 5.6s
+   Linting and checking validity of types ...
+
+ ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+   Collecting page data ...
+   Generating static pages (0/5) ...
+   Generating static pages (1/5) 
+   Generating static pages (2/5) 
+   Generating static pages (3/5) 
+ ✓ Generating static pages (5/5)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /_not-found                            993 B         103 kB
+└ ● /[locale]                            1.07 kB         149 kB
+    ├ /en
+    └ /fr
++ First Load JS shared by all             102 kB
+  ├ chunks/695-00bca043953d4170.js       45.3 kB
+  ├ chunks/d99d8e6a-80443bd3c9d31f50.js  54.2 kB
+  └ other shared chunks (total)          1.97 kB
+
+
+ƒ Middleware                             45.7 kB
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses generateStaticParams)
 

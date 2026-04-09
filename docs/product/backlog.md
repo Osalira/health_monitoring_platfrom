@@ -48,16 +48,16 @@
 
 ## Epic 3 - UI foundation, theming, and i18n
 
-- [ ] Tailwind configured
-- [ ] Semantic theme tokens established
-- [ ] Dark mode support implemented
-- [ ] Locale infrastructure added
-- [ ] EN dictionary added
-- [ ] FR dictionary added
-- [ ] Theme toggle implemented
-- [ ] Locale switcher implemented
-- [ ] Shared UI primitives created
-- [ ] Accessibility baseline added
+- [x] Tailwind configured (v3 with shadcn/ui CSS variable theme)
+- [x] Semantic theme tokens established (full light/dark CSS custom properties)
+- [x] Dark mode support implemented (next-themes, class strategy, system default)
+- [x] Locale infrastructure added (next-intl v4, middleware, [locale] routing)
+- [x] EN dictionary added (structured: common, nav, dashboard, theme, locale)
+- [x] FR dictionary added (mirror structure, French translations)
+- [x] Theme toggle implemented (DropdownMenu with Light/Dark/System)
+- [x] Locale switcher implemented (DropdownMenu with EN/FR, locale-aware navigation)
+- [x] Shared UI primitives created (Button, Card, Badge, Input, Skeleton, Separator, DropdownMenu)
+- [x] Accessibility baseline added (focus rings, aria-labels, keyboard navigation via Radix)
 
 ## Epic 4 - App shell and auth mock
 
