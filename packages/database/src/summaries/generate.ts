@@ -1,41 +1,20 @@
 /**
- * Visit-prep summary generation.
+ * Visit-prep summary generation with provenance and i18n.
  *
- * Produces a structured summary from existing patient data.
- * No LLM — uses a deterministic template approach.
+ * Fetches patient data from DB, delegates composition to @t1d/summary-engine,
+ * and persists the structured result.
  */
 
 import type { PrismaClient, Prisma } from '@prisma/client';
+import { composeVisitPrep, type SummaryLocale, type VisitPrepSummary, type SummaryInput } from '@t1d/summary-engine';
 
-export interface SummaryContent {
-  patientName: string;
-  generatedAt: string;
-  riskSummary: {
-    tier: string;
-    score: number;
-    topFactors: { name: string; value: number }[];
-  } | null;
-  recentMetrics: {
-    avgGlucose: number | null;
-    timeInRange: number | null;
-    latestHbA1c: number | null;
-    readingAdherence: number | null;
-  };
-  openItems: {
-    taskCount: number;
-    alertCount: number;
-    topTasks: string[];
-    topAlerts: string[];
-  };
-  deviceStatus: {
-    devices: { type: string; status: string; lastSync: string | null }[];
-  };
-}
+// Re-export for backward compat
+export type { VisitPrepSummary as SummaryContent } from '@t1d/summary-engine';
 
 export interface GenerateSummaryResult {
   id: string;
   kind: string;
-  content: SummaryContent;
+  content: VisitPrepSummary;
   generatedAt: Date;
 }
 
@@ -43,12 +22,13 @@ export async function generateVisitPrepSummary(
   prisma: PrismaClient,
   patientId: string,
   generatedByUserId?: string,
+  locale: SummaryLocale = 'en',
 ): Promise<GenerateSummaryResult> {
   // Fetch patient data in parallel
-  const [patient, risk, tasks, alerts, devices, recentGlucose, latestHbA1c] = await Promise.all([
+  const [patientRecord, risk, tasks, alerts, devices, recentMetrics, prevMetrics, latestHbA1c] = await Promise.all([
     prisma.patient.findUniqueOrThrow({
       where: { id: patientId },
-      select: { firstName: true, lastName: true },
+      select: { firstName: true, lastName: true, birthDate: true, diagnosisDate: true },
     }),
     prisma.riskAssessment.findFirst({
       where: { patientId },
@@ -58,48 +38,74 @@ export async function generateVisitPrepSummary(
       where: { patientId, status: { in: ['OPEN', 'IN_PROGRESS'] } },
       orderBy: { priority: 'desc' },
       take: 5,
-      select: { title: true },
+      select: { id: true, title: true },
     }),
     prisma.alert.findMany({
       where: { patientId, status: { in: ['ACTIVE', 'ACKNOWLEDGED'] } },
       orderBy: { severity: 'desc' },
       take: 5,
-      select: { explanation: true, type: true },
+      select: { id: true, explanation: true, type: true },
     }),
     prisma.device.findMany({
       where: { patientId },
-      select: { type: true, status: true, lastSyncedAt: true },
+      select: { id: true, type: true, status: true, lastSyncedAt: true },
     }),
+    // Last 7 days
     prisma.dailyMetric.findMany({
       where: { patientId },
       orderBy: { date: 'desc' },
       take: 7,
       select: { glucoseMean: true, timeInRange: true, readingCount: true, expectedReadingCount: true },
     }),
+    // Prior 7 days (days 8-14)
+    prisma.dailyMetric.findMany({
+      where: { patientId },
+      orderBy: { date: 'desc' },
+      skip: 7,
+      take: 7,
+      select: { glucoseMean: true, timeInRange: true },
+    }),
     prisma.observation.findFirst({
       where: { patientId, type: 'LAB', subType: 'HbA1c' },
       orderBy: { observedAt: 'desc' },
-      select: { value: true },
+      select: { id: true, value: true },
     }),
   ]);
 
-  // Compute recent averages
-  const metricsWithData = recentGlucose.filter((m) => m.glucoseMean != null);
-  const avgGlucose = metricsWithData.length > 0
-    ? metricsWithData.reduce((a, m) => a + m.glucoseMean!, 0) / metricsWithData.length
+  // Compute averages for current and previous weeks
+  const withData = recentMetrics.filter((m) => m.glucoseMean != null);
+  const avgGlucose = withData.length > 0
+    ? withData.reduce((a, m) => a + m.glucoseMean!, 0) / withData.length
     : null;
-  const timeInRange = metricsWithData.length > 0
-    ? metricsWithData.reduce((a, m) => a + (m.timeInRange ?? 0), 0) / metricsWithData.length
+  const timeInRange = withData.length > 0
+    ? withData.reduce((a, m) => a + (m.timeInRange ?? 0), 0) / withData.length
     : null;
-  const totalReadings = recentGlucose.reduce((a, m) => a + m.readingCount, 0);
-  const totalExpected = recentGlucose.reduce((a, m) => a + m.expectedReadingCount, 0);
-  const readingAdherence = totalExpected > 0 ? totalReadings / totalExpected : null;
+  const totalReadings = recentMetrics.reduce((a, m) => a + m.readingCount, 0);
+  const totalExpected = recentMetrics.reduce((a, m) => a + m.expectedReadingCount, 0);
+  const adherence = totalExpected > 0 ? totalReadings / totalExpected : null;
 
-  const content: SummaryContent = {
-    patientName: `${patient.firstName} ${patient.lastName}`,
-    generatedAt: new Date().toISOString(),
-    riskSummary: risk
+  const prevWithData = prevMetrics.filter((m) => m.glucoseMean != null);
+  const prevAvgGlucose = prevWithData.length > 0
+    ? prevWithData.reduce((a, m) => a + m.glucoseMean!, 0) / prevWithData.length
+    : null;
+  const prevTimeInRange = prevWithData.length > 0
+    ? prevWithData.reduce((a, m) => a + (m.timeInRange ?? 0), 0) / prevWithData.length
+    : null;
+
+  // Compute age
+  const now = new Date();
+  const age = now.getFullYear() - patientRecord.birthDate.getFullYear();
+
+  // Build input for summary engine
+  const input: SummaryInput = {
+    patient: {
+      name: `${patientRecord.firstName} ${patientRecord.lastName}`,
+      age,
+      diagnosisDate: patientRecord.diagnosisDate?.toISOString().slice(0, 10) ?? null,
+    },
+    risk: risk
       ? {
+          id: risk.id,
           tier: risk.tier,
           score: risk.score,
           topFactors: Object.entries(risk.factors as Record<string, number>)
@@ -108,26 +114,29 @@ export async function generateVisitPrepSummary(
             .map(([name, value]) => ({ name, value })),
         }
       : null,
-    recentMetrics: {
+    metrics: {
       avgGlucose: avgGlucose ? Math.round(avgGlucose) : null,
+      prevAvgGlucose: prevAvgGlucose ? Math.round(prevAvgGlucose) : null,
       timeInRange: timeInRange ? Math.round(timeInRange * 100) / 100 : null,
+      prevTimeInRange: prevTimeInRange ? Math.round(prevTimeInRange * 100) / 100 : null,
       latestHbA1c: latestHbA1c?.value ?? null,
-      readingAdherence: readingAdherence ? Math.round(readingAdherence * 100) / 100 : null,
+      latestHbA1cId: latestHbA1c?.id ?? null,
+      adherence: adherence ? Math.round(adherence * 100) / 100 : null,
     },
-    openItems: {
-      taskCount: tasks.length,
-      alertCount: alerts.length,
-      topTasks: tasks.map((t) => t.title),
-      topAlerts: alerts.map((a) => a.explanation ?? a.type),
-    },
-    deviceStatus: {
-      devices: devices.map((d) => ({
-        type: d.type,
-        status: d.status,
-        lastSync: d.lastSyncedAt?.toISOString() ?? null,
-      })),
-    },
+    openTasks: tasks.map((t) => ({ id: t.id, title: t.title })),
+    activeAlerts: alerts.map((a) => ({ id: a.id, explanation: a.explanation ?? a.type })),
+    devices: devices.map((d) => ({
+      id: d.id,
+      type: d.type,
+      status: d.status,
+      lastSyncHoursAgo: d.lastSyncedAt
+        ? (now.getTime() - d.lastSyncedAt.getTime()) / (1000 * 60 * 60)
+        : null,
+    })),
   };
+
+  // Compose summary
+  const content = composeVisitPrep(input, locale);
 
   // Persist
   const createData: Prisma.GeneratedSummaryUncheckedCreateInput = {
@@ -138,9 +147,7 @@ export async function generateVisitPrepSummary(
   };
   if (generatedByUserId) createData.generatedByUserId = generatedByUserId;
 
-  const summary = await prisma.generatedSummary.create({
-    data: createData,
-  });
+  const summary = await prisma.generatedSummary.create({ data: createData });
 
   return {
     id: summary.id,

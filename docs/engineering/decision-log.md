@@ -400,3 +400,22 @@ LLM-generated summaries risk unsupported clinical claims. A structured template 
 - no external API dependency
 - summary content structure is typed (SummaryContent interface)
 - if LLM is added later, the structured data serves as the input context
+
+## 2026-04-09 - Enhanced summaries with provenance citations and bilingual templates
+
+Status: Accepted
+
+### Decision
+
+Implement summary composition in `packages/summary-engine` as pure functions that produce structured VisitPrepSummary objects with three sections (facts/trends/discussion), each item citing its source data. Templates are bilingual (EN/FR) with the locale passed at generation time.
+
+### Why
+
+Clinicians need to trust generated content. By citing the source record for each statement (e.g., [risk], [observation], [device]) and separating facts from discussion points, the summary remains auditable and avoids unsupported claims. Bilingual templates keep the system self-contained without LLM dependency.
+
+### Consequences
+
+- every statement traces to a specific data record via Citation objects
+- old v1 summaries display a "regenerate" hint in the UI
+- the summary-engine has 10 unit tests validating EN/FR output, citations, and edge cases
+- summary text is template-based, not LLM — documented limitation

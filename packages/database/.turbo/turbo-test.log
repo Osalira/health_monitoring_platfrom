@@ -5,11 +5,11 @@
 
 [1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/osali/OneDrive/Bureau/ConsultantITBusiness/healthplatform/t1d-command-center/packages/database[39m
 
- [32m✓[39m src/ingestion/__tests__/schema.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/ingestion/__tests__/schema.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 20[2mms[22m[39m
  [32m✓[39m src/__tests__/client.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
 [2m      Tests [22m [1m[32m12 passed[39m[22m[90m (12)[39m
-[2m   Start at [22m 12:58:31
-[2m   Duration [22m 2.37s[2m (transform 331ms, setup 0ms, collect 1.10s, tests 22ms, environment 1ms, prepare 1.24s)[22m
+[2m   Start at [22m 13:11:00
+[2m   Duration [22m 2.79s[2m (transform 366ms, setup 0ms, collect 1.30s, tests 27ms, environment 1ms, prepare 952ms)[22m
 

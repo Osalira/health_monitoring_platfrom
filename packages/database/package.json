@@ -21,6 +21,7 @@
   "dependencies": {
     "@prisma/client": "^6.9.0",
     "@t1d/risk-engine": "workspace:*",
+    "@t1d/summary-engine": "workspace:*",
     "@t1d/synthetic-data": "workspace:*",
     "zod": "^3.24.0"
   },

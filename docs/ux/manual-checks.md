@@ -678,5 +678,37 @@
 - How to check: Switch to FR, verify all labels
 - Expected result: "Ajouter une tâche", "Accuser réception", "Résumé de préparation de visite"
 
-### Check 5 - Quality gates pass (99 tests, 14/14)
+### Check 5 - Quality gates pass (109 tests, 14/14)
 - Expected result: Zero errors
+
+## Enhanced visit prep summaries
+
+### Check 1 - Enhanced summary has three sections
+
+- What to check: Generated summary shows Facts, Trends, Discussion Points
+- How to check: Generate a new summary on any patient
+- Expected result:
+  - "Current Status" section with risk, HbA1c, glucose, adherence, device sync facts
+  - "Recent Trends" section with glucose/TIR changes (if data exists)
+  - "Discussion Points" section with suggested topics based on thresholds
+  - Citation tags [risk], [observation], [metric], [device] appear inline
+
+### Check 2 - Summary generated in French
+
+- What to check: French locale produces French summary text
+- How to check: Switch to FR, generate a summary
+- Expected result:
+  - Section titles: "État actuel", "Tendances récentes", "Points de discussion suggérés"
+  - Fact text in French: "Le dernier HbA1c est de..."
+  - Provenance note in French at bottom
+
+### Check 3 - Provenance note displayed
+
+- What to check: Bottom of summary shows data traceability disclaimer
+- Expected result: "All statements are derived from patient data..."
+
+### Check 4 - Summary engine unit tests pass
+
+- What to check: 10 compose tests pass
+- How to check: `pnpm --filter @t1d/summary-engine test`
+- Expected result: 10 tests (EN/FR generation, citations, trends, empty data, etc.)

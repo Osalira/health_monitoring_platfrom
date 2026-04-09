@@ -15,6 +15,7 @@
     "@t1d/auth": "workspace:*",
     "@t1d/database": "workspace:*",
     "@t1d/i18n": "workspace:*",
+    "@t1d/summary-engine": "workspace:*",
     "@t1d/types": "workspace:*",
     "@t1d/ui": "workspace:*",
     "lucide-react": "^0.510.0",

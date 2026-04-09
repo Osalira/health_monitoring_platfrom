@@ -1,15 +1,27 @@
 import { NextResponse } from 'next/server';
 import { prisma, generateVisitPrepSummary } from '@t1d/database';
+import type { SummaryLocale } from '@t1d/summary-engine';
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { patientId?: string; generatedByUserId?: string };
+    const body = (await request.json()) as {
+      patientId?: string;
+      generatedByUserId?: string;
+      locale?: string;
+    };
 
     if (!body.patientId) {
       return NextResponse.json({ error: 'patientId is required' }, { status: 400 });
     }
 
-    const result = await generateVisitPrepSummary(prisma, body.patientId, body.generatedByUserId);
+    const locale: SummaryLocale = body.locale === 'fr' ? 'fr' : 'en';
+
+    const result = await generateVisitPrepSummary(
+      prisma,
+      body.patientId,
+      body.generatedByUserId,
+      locale,
+    );
 
     return NextResponse.json(result, { status: 201 });
   } catch (error) {

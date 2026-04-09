@@ -1,5 +1,14 @@
 
 > @t1d/summary-engine@0.0.0 test C:\Users\osali\OneDrive\Bureau\ConsultantITBusiness\healthplatform\t1d-command-center\packages\summary-engine
-> echo "no tests yet"
+> vitest run
 
-"no tests yet"
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/osali/OneDrive/Bureau/ConsultantITBusiness/healthplatform/t1d-command-center/packages/summary-engine[39m
+
+ [32m✓[39m src/__tests__/compose.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m   Start at [22m 13:10:50
+[2m   Duration [22m 6.04s[2m (transform 1.16s, setup 0ms, collect 1.15s, tests 22ms, environment 0ms, prepare 2.51s)[22m
+
