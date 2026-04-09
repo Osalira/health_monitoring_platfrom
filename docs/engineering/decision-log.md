@@ -381,3 +381,22 @@ Pure functions are fully testable without a database. Materialized tables enable
 - WeeklyFeature has unique constraint on (patientId, weekStart)
 - Recomputation is triggered via `POST /api/compute-metrics`
 - Risk factors use the same structure as the existing risk-explanation UI component
+
+## 2026-04-09 - Structured visit-prep summaries without LLM
+
+Status: Accepted
+
+### Decision
+
+Generate visit-prep summaries using a deterministic structured template approach, not an LLM. The summary aggregates: latest risk assessment + top factors, 7-day metrics (avg glucose, TIR, adherence), open tasks, active alerts, and device status. Content is stored as JSON in GeneratedSummary.
+
+### Why
+
+LLM-generated summaries risk unsupported clinical claims. A structured template is deterministic, auditable, and fully traceable to underlying data — aligned with the "explainable, not magical" product principle. It can be extended with LLM augmentation later if needed.
+
+### Consequences
+
+- summaries are repeatable and debuggable
+- no external API dependency
+- summary content structure is typed (SummaryContent interface)
+- if LLM is added later, the structured data serves as the input context

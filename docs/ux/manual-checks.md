@@ -648,3 +648,35 @@
 
 ### Check 3 - Quality gates pass (99 tests, 14/14)
 - Expected result: Zero errors
+
+## Stage 11 - Care coordination and summaries
+
+### Check 1 - Create task from patient detail (requires DB)
+
+- What to check: "Add Task" creates a new task
+- How to check:
+  1. Open patient detail, click "Add Task" in sidebar
+  2. Enter title and select priority
+  3. Click "Create"
+- Expected result: Task appears in the panel after refresh
+
+### Check 2 - Alert actions work (requires DB)
+
+- What to check: Acknowledge/Resolve/Dismiss buttons update alert status
+- How to check: Click "Acknowledge" on an active alert
+- Expected result: Alert updates, action buttons change
+
+### Check 3 - Generate visit prep summary (requires DB)
+
+- What to check: "Generate" button produces a structured summary
+- How to check: On patient detail, scroll to Visit Prep Summary, click Generate
+- Expected result: Summary appears with risk, metrics, and open items sections
+
+### Check 4 - All new strings localized
+
+- What to check: Task form, alert actions, summary section in French
+- How to check: Switch to FR, verify all labels
+- Expected result: "Ajouter une tâche", "Accuser réception", "Résumé de préparation de visite"
+
+### Check 5 - Quality gates pass (99 tests, 14/14)
+- Expected result: Zero errors

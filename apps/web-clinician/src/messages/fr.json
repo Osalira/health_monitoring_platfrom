@@ -130,7 +130,62 @@
       "dataRecency": "Fraîcheur des données",
       "dataRecencyDesc": "Actualité des données disponibles"
     },
-    "riskExplainerNote": "Le score de risque est calculé à partir des facteurs ci-dessus. Des valeurs plus élevées indiquent une contribution plus importante au risque."
+    "riskExplainerNote": "Le score de risque est calculé à partir des facteurs ci-dessus. Des valeurs plus élevées indiquent une contribution plus importante au risque.",
+    "taskForm": {
+      "addTask": "Ajouter une tâche",
+      "titlePlaceholder": "Titre de la tâche",
+      "descriptionPlaceholder": "Description (optionnel)",
+      "create": "Créer",
+      "creating": "Création…",
+      "cancel": "Annuler",
+      "assignTo": "Assigner à",
+      "unassigned": "Non assigné",
+      "priority": {
+        "LOW": "Faible",
+        "MEDIUM": "Moyen",
+        "HIGH": "Élevé",
+        "URGENT": "Urgent"
+      }
+    },
+    "taskActions": {
+      "start": "Démarrer",
+      "complete": "Terminer",
+      "cancel": "Annuler"
+    },
+    "alertActions": {
+      "acknowledge": "Accuser réception",
+      "resolve": "Résoudre",
+      "dismiss": "Ignorer"
+    },
+    "summary": {
+      "title": "Résumé de préparation de visite",
+      "generate": "Générer",
+      "generating": "Génération…",
+      "noSummary": "Aucun résumé généré. Cliquez sur Générer pour en créer un.",
+      "generatedAt": "Généré {time}",
+      "riskSection": "Évaluation du risque",
+      "metricsSection": "Métriques récentes (7 jours)",
+      "avgGlucose": "Glycémie moyenne",
+      "tir": "Temps dans la cible",
+      "adherence": "Observance",
+      "openItems": "Éléments ouverts"
+    },
+    "outreach": {
+      "title": "Journal de suivi",
+      "noLogs": "Aucune entrée de suivi.",
+      "addLog": "Ajouter un suivi",
+      "notePlaceholder": "Note sur le contact…",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "cancel": "Annuler",
+      "type": {
+        "phone": "Téléphone",
+        "email": "Courriel",
+        "visit": "Visite",
+        "message": "Message",
+        "other": "Autre"
+      }
+    }
   },
   "settings": {
     "title": "Paramètres",

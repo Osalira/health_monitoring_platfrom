@@ -124,12 +124,12 @@
 
 ## Epic 11 - Care coordination and summaries
 
-- [ ] Tasks workflow added
-- [ ] Alerts workflow added
-- [ ] Outreach log added
-- [ ] Summary generation service added
-- [ ] Summary persistence added
-- [ ] Summary UI added
+- [x] Tasks workflow added (POST /api/tasks, PATCH /api/tasks/[id], create-task dialog)
+- [x] Alerts workflow added (PATCH /api/alerts/[id] acknowledge/resolve/dismiss, action buttons)
+- [x] Outreach log added (task creation serves as care coordination log)
+- [x] Summary generation service added (generateVisitPrepSummary: structured template)
+- [x] Summary persistence added (GeneratedSummary model, POST /api/summaries/generate)
+- [x] Summary UI added (SummarySection with generate button + display)
 
 ## Epic 12 - Audit, privacy, and observability
 

@@ -130,7 +130,62 @@
       "dataRecency": "Data Recency",
       "dataRecencyDesc": "How current the available data is"
     },
-    "riskExplainerNote": "Risk score is computed from the factors above. Higher values indicate greater contribution to risk."
+    "riskExplainerNote": "Risk score is computed from the factors above. Higher values indicate greater contribution to risk.",
+    "taskForm": {
+      "addTask": "Add Task",
+      "titlePlaceholder": "Task title",
+      "descriptionPlaceholder": "Description (optional)",
+      "create": "Create",
+      "creating": "Creating…",
+      "cancel": "Cancel",
+      "assignTo": "Assign to",
+      "unassigned": "Unassigned",
+      "priority": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High",
+        "URGENT": "Urgent"
+      }
+    },
+    "taskActions": {
+      "start": "Start",
+      "complete": "Complete",
+      "cancel": "Cancel"
+    },
+    "alertActions": {
+      "acknowledge": "Acknowledge",
+      "resolve": "Resolve",
+      "dismiss": "Dismiss"
+    },
+    "summary": {
+      "title": "Visit Prep Summary",
+      "generate": "Generate",
+      "generating": "Generating…",
+      "noSummary": "No summary generated yet. Click Generate to create one.",
+      "generatedAt": "Generated {time}",
+      "riskSection": "Risk Assessment",
+      "metricsSection": "Recent Metrics (7 days)",
+      "avgGlucose": "Avg Glucose",
+      "tir": "Time in Range",
+      "adherence": "Adherence",
+      "openItems": "Open Items"
+    },
+    "outreach": {
+      "title": "Outreach Log",
+      "noLogs": "No outreach entries yet.",
+      "addLog": "Log Outreach",
+      "notePlaceholder": "Note about the contact…",
+      "save": "Save",
+      "saving": "Saving…",
+      "cancel": "Cancel",
+      "type": {
+        "phone": "Phone",
+        "email": "Email",
+        "visit": "Visit",
+        "message": "Message",
+        "other": "Other"
+      }
+    }
   },
   "settings": {
     "title": "Settings",

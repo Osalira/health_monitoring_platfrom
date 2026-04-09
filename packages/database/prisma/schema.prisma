@@ -129,6 +129,7 @@ model User {
   createdTasks     Task[]             @relation("TaskCreatedBy")
   auditEvents      AuditEvent[]       @relation("AuditActor")
   generatedSummaries GeneratedSummary[] @relation("SummaryGeneratedBy")
+  outreachLogs     OutreachLog[]      @relation("OutreachAuthor")
 
   @@map("users")
 }
@@ -157,6 +158,7 @@ model Patient {
   consents        ConsentRecord[]
   dailyMetrics    DailyMetric[]
   weeklyFeatures  WeeklyFeature[]
+  outreachLogs    OutreachLog[]
 
   @@index([lastName, firstName])
   @@map("patients")
@@ -355,6 +357,24 @@ model ConsentRecord {
   @@index([patientId])
   @@index([consentType, status])
   @@map("consent_records")
+}
+
+/// Outreach and care coordination log entry.
+model OutreachLog {
+  id          String   @id @default(uuid())
+  patientId   String
+  authorId    String?
+  type        String
+  note        String
+  contactedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  author  User?   @relation("OutreachAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([patientId])
+  @@index([contactedAt])
+  @@map("outreach_logs")
 }
 
 /// Computed daily metrics for a patient (one row per patient per day).

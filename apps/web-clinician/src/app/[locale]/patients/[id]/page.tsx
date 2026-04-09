@@ -10,7 +10,10 @@ import { RecentEvents } from '@/components/patient/recent-events';
 import { RiskExplanation } from '@/components/patient/risk-explanation';
 import { TaskPanel } from '@/components/patient/task-panel';
 import { AlertPanel } from '@/components/patient/alert-panel';
+import { SummarySection } from '@/components/patient/summary-section';
+import { OutreachPanel } from '@/components/patient/outreach-panel';
 import type { PatientDetail } from '@/lib/queries/patient-detail';
+import type { SummaryContent } from '@t1d/database';
 
 export default async function PatientDetailPage({
   params,
@@ -40,6 +43,13 @@ function PatientDetailContent({ patient, days }: { patient: PatientDetail; days:
     value: g.value,
   }));
 
+  const summaryForComponent = patient.latestSummary
+    ? {
+        ...patient.latestSummary,
+        content: patient.latestSummary.content as unknown as SummaryContent,
+      }
+    : null;
+
   return (
     <div className="container mx-auto px-4 py-8">
       <PatientHeader patient={patient} />
@@ -62,11 +72,16 @@ function PatientDetailContent({ patient, days }: { patient: PatientDetail; days:
             labs={patient.labs}
           />
           <RiskExplanation risk={patient.risk} />
+          <SummarySection
+            patientId={patient.id}
+            latestSummary={summaryForComponent}
+          />
         </div>
 
         <div className="space-y-6">
-          <TaskPanel tasks={patient.tasks} />
+          <TaskPanel patientId={patient.id} tasks={patient.tasks} />
           <AlertPanel alerts={patient.alerts} />
+          <OutreachPanel patientId={patient.id} logs={patient.outreachLogs} />
         </div>
       </div>
     </div>

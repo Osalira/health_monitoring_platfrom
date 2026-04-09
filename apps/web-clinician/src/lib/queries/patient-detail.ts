@@ -36,6 +36,15 @@ export interface PatientDetail {
     status: string;
     priority: string;
     dueAt: Date | null;
+    assignedTo: { displayName: string } | null;
+  }[];
+
+  outreachLogs: {
+    id: string;
+    type: string;
+    note: string;
+    contactedAt: Date;
+    author: { displayName: string } | null;
   }[];
 
   alerts: {
@@ -46,6 +55,13 @@ export interface PatientDetail {
     explanation: string | null;
     triggeredAt: Date;
   }[];
+
+  latestSummary: {
+    id: string;
+    kind: string;
+    content: Record<string, unknown>;
+    generatedAt: Date;
+  } | null;
 }
 
 export async function getPatientDetail(
@@ -73,7 +89,18 @@ export async function getPatientDetail(
       tasks: {
         where: { status: { in: ['OPEN', 'IN_PROGRESS'] } },
         orderBy: { priority: 'desc' },
-        select: { id: true, title: true, status: true, priority: true, dueAt: true },
+        select: {
+          id: true, title: true, status: true, priority: true, dueAt: true,
+          assignedTo: { select: { displayName: true } },
+        },
+      },
+      outreachLogs: {
+        orderBy: { contactedAt: 'desc' },
+        take: 10,
+        select: {
+          id: true, type: true, note: true, contactedAt: true,
+          author: { select: { displayName: true } },
+        },
       },
       alerts: {
         where: { status: { in: ['ACTIVE', 'ACKNOWLEDGED'] } },
@@ -92,8 +119,8 @@ export async function getPatientDetail(
 
   if (!patient) return null;
 
-  // Fetch observations in parallel
-  const [glucose, insulin, meals, activity, labs] = await Promise.all([
+  // Fetch observations and latest summary in parallel
+  const [glucose, insulin, meals, activity, labs, latestSummaryRecord] = await Promise.all([
     prisma.observation.findMany({
       where: { patientId: id, type: 'GLUCOSE', observedAt: { gte: windowStart } },
       orderBy: { observedAt: 'asc' },
@@ -118,6 +145,11 @@ export async function getPatientDetail(
       where: { patientId: id, type: 'LAB' },
       orderBy: { observedAt: 'desc' },
       select: { observedAt: true, value: true, unit: true, subType: true },
+    }),
+    prisma.generatedSummary.findFirst({
+      where: { patientId: id },
+      orderBy: { generatedAt: 'desc' },
+      select: { id: true, kind: true, content: true, generatedAt: true },
     }),
   ]);
 
@@ -147,5 +179,14 @@ export async function getPatientDetail(
     labs,
     tasks: patient.tasks,
     alerts: patient.alerts,
+    outreachLogs: patient.outreachLogs,
+    latestSummary: latestSummaryRecord
+      ? {
+          id: latestSummaryRecord.id,
+          kind: latestSummaryRecord.kind,
+          content: latestSummaryRecord.content as Record<string, unknown>,
+          generatedAt: latestSummaryRecord.generatedAt,
+        }
+      : null,
   };
 }

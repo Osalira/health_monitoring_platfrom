@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle, Badge } from '@t1d/ui';
 import { formatRelativeTime, severityVariant } from '@/lib/format';
+import { AlertActions } from './alert-actions';
 
 interface AlertPanelProps {
   alerts: {
@@ -44,6 +45,7 @@ export function AlertPanel({ alerts }: AlertPanelProps) {
                 {alert.explanation && (
                   <p className="mt-1 text-sm text-muted-foreground">{alert.explanation}</p>
                 )}
+                <AlertActions alertId={alert.id} currentStatus={alert.status} />
               </div>
             ))}
           </div>

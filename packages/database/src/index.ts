@@ -37,3 +37,6 @@ export {
 
 // Metrics
 export { computePatientMetrics, type ComputeMetricsResult } from './metrics/index';
+
+// Summaries
+export { generateVisitPrepSummary, type SummaryContent, type GenerateSummaryResult } from './summaries/index';
