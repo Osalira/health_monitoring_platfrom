@@ -1,15 +1,19 @@
 # Architecture Overview
 
 ## System summary
+
 T1D Command Center is a clinician-first healthcare platform built as a pnpm monorepo with a modular-monolith architecture. It supports synthetic healthcare-like data ingestion, clinician workflows, explainable risk scoring, auditability, bilingual UI, and theme-aware UI.
 
 ## High-level architecture
-- apps/web: clinician-facing Next.js app and patient-facing shell
+
+- apps/web-clinician: clinician-facing Next.js app
+- apps/web-patient: patient-facing shell (future)
 - apps/api: API and domain orchestration layer
 - apps/worker: background processing for derived metrics, risk scoring, and summaries
-- shared packages: UI, config, types, i18n, database, synthetic data, observability, risk logic
+- shared packages: UI, config, types, i18n, database, auth, observability, synthetic-data, risk-engine, summary-engine, fhir-model
 
 ## Core architectural principles
+
 - Document-driven implementation
 - Modular boundaries inside a monolith first
 - Clear traceability from raw input to normalized event to derived metric
@@ -18,6 +22,7 @@ T1D Command Center is a clinician-first healthcare platform built as a pnpm mono
 - Testing and operability built in from the start
 
 ## Primary technical capabilities
+
 - population dashboard
 - patient detail views
 - seeded synthetic data
@@ -28,6 +33,7 @@ T1D Command Center is a clinician-first healthcare platform built as a pnpm mono
 - structured logging and health checks
 
 ## Constraints
+
 - TypeScript strict mode
 - pnpm workspace
 - Next.js-based frontend

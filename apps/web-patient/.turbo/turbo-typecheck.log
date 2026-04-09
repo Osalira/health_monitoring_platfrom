@@ -1,0 +1,4 @@
+
+> @t1d/web-patient@0.0.0 typecheck C:\Users\osali\OneDrive\Bureau\ConsultantITBusiness\healthplatform\t1d-command-center\apps\web-patient
+> tsc --noEmit
+

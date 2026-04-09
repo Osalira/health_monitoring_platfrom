@@ -1,0 +1,17 @@
+{
+  "name": "@t1d/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@t1d/types": "workspace:*"
+  }
+}

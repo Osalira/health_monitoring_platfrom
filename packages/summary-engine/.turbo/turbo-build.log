@@ -1,0 +1,4 @@
+
+> @t1d/summary-engine@0.0.0 build C:\Users\osali\OneDrive\Bureau\ConsultantITBusiness\healthplatform\t1d-command-center\packages\summary-engine
+> tsc --project tsconfig.build.json
+

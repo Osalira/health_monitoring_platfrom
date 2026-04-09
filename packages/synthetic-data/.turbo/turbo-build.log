@@ -1,0 +1,4 @@
+
+> @t1d/synthetic-data@0.0.0 build C:\Users\osali\OneDrive\Bureau\ConsultantITBusiness\healthplatform\t1d-command-center\packages\synthetic-data
+> tsc --project tsconfig.build.json
+

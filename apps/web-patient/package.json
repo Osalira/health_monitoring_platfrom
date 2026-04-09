@@ -1,0 +1,13 @@
+{
+  "name": "@t1d/web-patient",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo \"not implemented yet\"",
+    "build": "tsc --noEmit",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"no tests yet\""
+  }
+}

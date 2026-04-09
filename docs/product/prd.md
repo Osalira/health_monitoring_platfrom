@@ -1,15 +1,11 @@
-
----
-
-## 3. `docs/product/prd.md`
-
-```md
 # PRD - T1D Command Center
 
 ## Vision
+
 Build a clinician-first digital platform for proactive type 1 diabetes care that unifies heterogeneous patient data, highlights the highest-priority patients, and enables traceable, explainable care workflows.
 
 ## Product principles
+
 - Clinician-first, not chatbot-first
 - Explainable, not magical
 - Bilingual from day one
@@ -20,6 +16,7 @@ Build a clinician-first digital platform for proactive type 1 diabetes care that
 - Privacy-aware by design
 
 ## Primary users
+
 - Clinician
 - Diabetes educator
 - Clinic administrator
@@ -27,6 +24,7 @@ Build a clinician-first digital platform for proactive type 1 diabetes care that
 - Caregiver
 
 ## MVP goals
+
 - Population dashboard for clinicians
 - Patient detail page with trends and context
 - Synthetic ingestion and seeded data
@@ -38,6 +36,7 @@ Build a clinician-first digital platform for proactive type 1 diabetes care that
 - Light/dark theme support
 
 ## Non-goals for MVP
+
 - Native mobile app
 - Live chat or real-time messaging
 - Real EMR integrations
@@ -46,6 +45,7 @@ Build a clinician-first digital platform for proactive type 1 diabetes care that
 - Medication recommendation automation
 
 ## Core product requirements
+
 - All user-facing UI must work in English and French.
 - All major UI surfaces must work in light and dark mode.
 - All generated insights must be traceable to underlying data.
@@ -57,7 +57,9 @@ Build a clinician-first digital platform for proactive type 1 diabetes care that
 ## Core user journeys
 
 ### 1. Clinician Monday Morning Review
+
 A clinician signs in and sees:
+
 - summary KPIs
 - a prioritized patient roster
 - risk tier or score
@@ -65,33 +67,34 @@ A clinician signs in and sees:
 - sync/adherence issues
 - alerts/tasks requiring attention
 
-Outcome:
-The clinician can quickly identify who needs review now and why.
+Outcome: the clinician can quickly identify who needs review now and why.
 
 ### 2. Open Patient Chart
+
 A clinician selects a patient and sees:
+
 - patient summary
 - longitudinal glucose and supporting context
 - insulin, meals, activity, labs, and tasks
 - recent changes and alerts
 - risk explanation
 
-Outcome:
-The clinician understands the patient’s recent trajectory and can prepare for follow-up.
+Outcome: the clinician understands the patient's recent trajectory and can prepare for follow-up.
 
 ### 3. Generate Visit Prep Summary
+
 A clinician generates a structured summary based on existing data.
 
-Outcome:
-The summary captures key changes, relevant metrics, and discussion points without unsupported claims.
+Outcome: the summary captures key changes, relevant metrics, and discussion points without unsupported claims.
 
 ### 4. Review Audit Trail
+
 A clinician or admin reviews important actions and access events.
 
-Outcome:
-Sensitive reads/writes are visible and traceable.
+Outcome: sensitive reads/writes are visible and traceable.
 
 ## Success criteria
+
 - Demo environment is stable and repeatable
 - Synthetic seed data creates meaningful patient stories
 - Dashboard and patient chart flows are credible and polished
@@ -100,6 +103,7 @@ Sensitive reads/writes are visible and traceable.
 - Main workflow passes automated and manual checks
 
 ## Constraints
+
 - Build as a pnpm monorepo
 - Use Next.js + TypeScript
 - Favor modular-monolith boundaries over premature microservices

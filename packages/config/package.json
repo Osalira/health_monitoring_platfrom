@@ -1,0 +1,10 @@
+{
+  "name": "@t1d/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint.config.mjs",
+    "./prettier": "./.prettierrc.json"
+  }
+}

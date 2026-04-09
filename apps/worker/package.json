@@ -1,0 +1,13 @@
+{
+  "name": "@t1d/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo \"worker not configured yet\"",
+    "build": "tsc --project tsconfig.build.json",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"no tests yet\""
+  }
+}
