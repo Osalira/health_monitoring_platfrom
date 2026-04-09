@@ -5,32 +5,40 @@
    ▲ Next.js 15.5.15
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 5.6s
+ ✓ Compiled successfully in 5.8s
    Linting and checking validity of types ...
 
  ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
    Collecting page data ...
-   Generating static pages (0/5) ...
-   Generating static pages (1/5) 
-   Generating static pages (2/5) 
-   Generating static pages (3/5) 
- ✓ Generating static pages (5/5)
+   Generating static pages (0/9) ...
+   Generating static pages (2/9) 
+   Generating static pages (4/9) 
+   Generating static pages (6/9) 
+ ✓ Generating static pages (9/9)
    Finalizing page optimization ...
    Collecting build traces ...
 
 Route (app)                                 Size  First Load JS
 ┌ ○ /_not-found                            993 B         103 kB
-└ ● /[locale]                            1.07 kB         149 kB
-    ├ /en
-    └ /fr
+├ ● /[locale]                            1.14 kB         150 kB
+├   ├ /en
+├   └ /fr
+├ ● /[locale]/patients                   1.14 kB         150 kB
+├   ├ /en/patients
+├   └ /fr/patients
+├ ƒ /[locale]/patients/[id]              1.09 kB         155 kB
+└ ● /[locale]/settings                     272 B         114 kB
+    ├ /en/settings
+    └ /fr/settings
 + First Load JS shared by all             102 kB
   ├ chunks/695-00bca043953d4170.js       45.3 kB
   ├ chunks/d99d8e6a-80443bd3c9d31f50.js  54.2 kB
-  └ other shared chunks (total)          1.97 kB
+  └ other shared chunks (total)             2 kB
 
 
 ƒ Middleware                             45.7 kB
 
-○  (Static)  prerendered as static content
-●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
 

@@ -208,15 +208,105 @@
 - Expected result:
   - Zero errors across all commands
 
-## Stage 4 - App shell
+## Stage 4 - App shell and auth mock
 
-### Check 1 - Route shell and navigation
+### Check 1 - App shell renders with sidebar navigation
 
-- What to check: App shell and navigation work
+- What to check: Sidebar navigation displays and works on desktop
 - How to check:
-  1. Open the clinician app
-  2. Navigate across the available shell routes
+  1. Run `pnpm --filter @t1d/web-clinician dev`
+  2. Open `http://localhost:3000` (redirects to `/en`)
+  3. Verify left sidebar shows: Dashboard, Patients, Settings
+  4. Click each nav item — URL and content change
+  5. Active nav item is highlighted
 - Expected result:
-  - Navigation is clear and accessible
-  - Header contains locale and theme controls
-  - Loading and empty states render properly
+  - Sidebar is visible on desktop, hidden on mobile
+  - Active page is visually indicated
+  - All nav labels are localized
+
+### Check 2 - Mobile navigation works
+
+- What to check: Mobile nav bar displays on small viewports
+- How to check:
+  1. Resize browser to mobile width (< 768px)
+  2. Sidebar disappears, horizontal nav bar appears below header
+  3. Nav items are accessible
+- Expected result:
+  - Mobile nav shows icons with labels on small screens
+  - Navigation works correctly
+
+### Check 3 - User menu and role switching
+
+- What to check: Demo user switcher works
+- How to check:
+  1. Click the user icon in the header
+  2. See dropdown with all 5 demo users (Dr. Chen, Marc Dupont, Admin, Alex, Julie)
+  3. Each shows name and localized role
+  4. Select a different user
+  5. Header updates to show new user name and role badge
+- Expected result:
+  - User switches immediately
+  - Role badge updates
+  - Preference persists on page refresh (cookie-based)
+
+### Check 4 - Route structure works
+
+- What to check: All routes render correctly
+- How to check:
+  1. Visit `/en` — Dashboard with KPI cards
+  2. Visit `/en/patients` — Patients page with empty state
+  3. Visit `/en/patients/test-123` — Patient detail placeholder
+  4. Visit `/en/settings` — Settings page
+  5. Visit `/en/nonexistent` — 404 page
+- Expected result:
+  - Each page has localized title and content
+  - Empty states are informative
+  - 404 shows localized message with back-to-dashboard link
+
+### Check 5 - All text localized in both locales
+
+- What to check: Switching to French localizes all new text
+- How to check:
+  1. Switch to French via locale switcher
+  2. Check sidebar: "Tableau de bord", "Patients", "Paramètres"
+  3. Check user menu: role shows "Clinicien", "Éducateur", etc.
+  4. Check error/empty states in French
+  5. Check "Mode démo" badge
+- Expected result:
+  - Zero English strings visible when in French locale
+  - Role names, nav items, page titles, empty states all in French
+
+### Check 6 - Dark mode works across shell
+
+- What to check: All new shell UI renders correctly in dark mode
+- How to check:
+  1. Toggle to dark mode
+  2. Check sidebar background and borders
+  3. Check header, user menu dropdown, nav active state
+  4. Check empty state cards
+- Expected result:
+  - All elements use semantic tokens
+  - No broken contrast or invisible text
+
+### Check 7 - Keyboard accessibility
+
+- What to check: Shell navigation is keyboard accessible
+- How to check:
+  1. Tab through sidebar nav items — focus rings visible
+  2. Tab to user menu — Enter opens dropdown
+  3. Arrow through users — Enter selects
+  4. Tab to locale/theme controls — same behavior
+- Expected result:
+  - All interactive elements have visible focus indicators
+  - Dropdowns navigable with keyboard
+
+### Check 8 - Quality gates pass
+
+- What to check: All CI-equivalent commands pass
+- How to check:
+  1. `pnpm lint` — 14/14
+  2. `pnpm typecheck` — 14/14
+  3. `pnpm test` — 14/14 (28 real tests: 15 auth + 10 UI + 3 i18n)
+  4. `pnpm build` — 14/14
+- Expected result:
+  - Zero errors across all commands

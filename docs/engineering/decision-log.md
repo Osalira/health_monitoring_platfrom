@@ -168,3 +168,43 @@ This is the recommended next-intl v4 pattern for App Router. It provides locale-
 - all routes are prefixed with locale
 - locale-aware `Link`, `useRouter`, `usePathname` from `@/i18n/navigation`
 - `setRequestLocale()` must be called in every page/layout for static rendering
+
+## 2026-04-09 - Mock auth via packages/auth with cookie-based user switching
+
+Status: Accepted
+
+### Decision
+
+Implement mock auth as a pure TypeScript module in `packages/auth`. No HTTP auth flow. `getSession()` returns a demo user object. User switching stores the selected user ID in a client-side cookie (`t1d_demo_user`), which the server layout reads to resolve the active user.
+
+Five predefined demo users cover all roles: clinician (default), educator, admin, patient, caregiver.
+
+### Why
+
+This keeps the demo self-contained (no external auth provider needed) while the architecture supports real auth replacement later. The only function that would change in production is `getSession()` — the rest (role checks, guards, types) remain the same.
+
+### Consequences
+
+- `getSession()` is the single seam for auth replacement
+- `hasRole`, `hasAnyRole`, `requireRole` work identically with real or mock auth
+- cookie-based user switching is demo-only and has no security — acceptable for MVP
+- all components receive the user via props from the server layout, not from a global client store
+
+## 2026-04-09 - Sidebar navigation pattern for clinician app
+
+Status: Accepted
+
+### Decision
+
+Use a fixed sidebar navigation (desktop) with a horizontal mobile nav bar. The sidebar contains Dashboard, Patients, and Settings links with icons and localized labels. Active state is indicated visually.
+
+### Why
+
+Clinical apps are information-dense. A persistent sidebar provides stable navigation landmarks and keeps the main content area maximized. This matches standard healthcare app patterns.
+
+### Consequences
+
+- navigation is always visible on desktop
+- mobile gets a compact horizontal nav bar
+- sidebar width (w-56) is consistent and predictable
+- adding new nav items is a single-line change to the NAV_ITEMS array

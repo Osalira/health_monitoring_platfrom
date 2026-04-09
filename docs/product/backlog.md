@@ -61,13 +61,13 @@
 
 ## Epic 4 - App shell and auth mock
 
-- [ ] App shell created
-- [ ] Route structure created
-- [ ] Mock auth/session layer added
-- [ ] Role model helpers added
-- [ ] Route guard strategy added
-- [ ] Header/navigation added
-- [ ] Loading/empty/error states added
+- [x] App shell created (sidebar nav, mobile nav, responsive layout)
+- [x] Route structure created (dashboard, patients, patients/[id], settings)
+- [x] Mock auth/session layer added (packages/auth with demo users, cookie-based switching)
+- [x] Role model helpers added (hasRole, hasAnyRole, requireRole, AuthorizationError)
+- [x] Route guard strategy added (server-side session check, requireRole pattern)
+- [x] Header/navigation added (user menu with role switcher, theme toggle, locale switcher)
+- [x] Loading/empty/error states added (loading.tsx, error.tsx, not-found.tsx, EmptyState)
 
 ## Epic 5 - Database and domain implementation
 

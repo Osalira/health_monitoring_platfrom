@@ -5,10 +5,19 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
-    "test": "echo \"no tests yet\""
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@t1d/types": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0"
   }
 }

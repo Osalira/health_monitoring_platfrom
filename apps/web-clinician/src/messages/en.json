@@ -7,12 +7,14 @@
       "confirm": "Confirm",
       "close": "Close",
       "back": "Back",
-      "next": "Next"
+      "next": "Next",
+      "retry": "Retry"
     },
     "states": {
       "loading": "Loading…",
       "error": "Something went wrong",
-      "empty": "No data available"
+      "empty": "No data available",
+      "notFound": "Page not found"
     },
     "labels": {
       "search": "Search",
@@ -30,6 +32,18 @@
     "settings": "Settings",
     "help": "Help"
   },
+  "roles": {
+    "clinician": "Clinician",
+    "educator": "Educator",
+    "admin": "Administrator",
+    "patient": "Patient",
+    "caregiver": "Caregiver"
+  },
+  "auth": {
+    "switchUser": "Switch user",
+    "currentUser": "Current user",
+    "demoMode": "Demo mode"
+  },
   "dashboard": {
     "title": "T1D Command Center",
     "subtitle": "Clinician Dashboard",
@@ -40,6 +54,26 @@
       "pendingTasks": "Pending Tasks",
       "recentAlerts": "Recent Alerts"
     }
+  },
+  "patients": {
+    "title": "Patients",
+    "description": "View and manage your patient roster.",
+    "empty": "No patients found. Seed data to get started."
+  },
+  "patientDetail": {
+    "title": "Patient Detail",
+    "backToList": "Back to patients"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your preferences and configuration."
+  },
+  "errors": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again.",
+    "notFoundTitle": "Page not found",
+    "notFoundDescription": "The page you are looking for does not exist or has been moved.",
+    "backToDashboard": "Back to dashboard"
   },
   "theme": {
     "light": "Light",

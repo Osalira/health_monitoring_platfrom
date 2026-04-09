@@ -7,12 +7,14 @@
       "confirm": "Confirmer",
       "close": "Fermer",
       "back": "Retour",
-      "next": "Suivant"
+      "next": "Suivant",
+      "retry": "Réessayer"
     },
     "states": {
       "loading": "Chargement…",
       "error": "Une erreur est survenue",
-      "empty": "Aucune donnée disponible"
+      "empty": "Aucune donnée disponible",
+      "notFound": "Page introuvable"
     },
     "labels": {
       "search": "Rechercher",
@@ -30,6 +32,18 @@
     "settings": "Paramètres",
     "help": "Aide"
   },
+  "roles": {
+    "clinician": "Clinicien",
+    "educator": "Éducateur",
+    "admin": "Administrateur",
+    "patient": "Patient",
+    "caregiver": "Aidant"
+  },
+  "auth": {
+    "switchUser": "Changer d'utilisateur",
+    "currentUser": "Utilisateur actuel",
+    "demoMode": "Mode démo"
+  },
   "dashboard": {
     "title": "Centre de contrôle DT1",
     "subtitle": "Tableau de bord clinicien",
@@ -40,6 +54,26 @@
       "pendingTasks": "Tâches en attente",
       "recentAlerts": "Alertes récentes"
     }
+  },
+  "patients": {
+    "title": "Patients",
+    "description": "Consultez et gérez votre liste de patients.",
+    "empty": "Aucun patient trouvé. Alimentez les données pour commencer."
+  },
+  "patientDetail": {
+    "title": "Détail du patient",
+    "backToList": "Retour aux patients"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "description": "Gérez vos préférences et votre configuration."
+  },
+  "errors": {
+    "title": "Une erreur est survenue",
+    "description": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+    "notFoundTitle": "Page introuvable",
+    "notFoundDescription": "La page que vous recherchez n'existe pas ou a été déplacée.",
+    "backToDashboard": "Retour au tableau de bord"
   },
   "theme": {
     "light": "Clair",

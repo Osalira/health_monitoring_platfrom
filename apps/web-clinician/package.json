@@ -12,6 +12,7 @@
     "test": "echo \"no tests yet\""
   },
   "dependencies": {
+    "@t1d/auth": "workspace:*",
     "@t1d/i18n": "workspace:*",
     "@t1d/types": "workspace:*",
     "@t1d/ui": "workspace:*",
