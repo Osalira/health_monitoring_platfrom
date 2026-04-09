@@ -155,6 +155,8 @@ model Patient {
   summaries       GeneratedSummary[]
   auditEvents     AuditEvent[]       @relation("AuditPatient")
   consents        ConsentRecord[]
+  dailyMetrics    DailyMetric[]
+  weeklyFeatures  WeeklyFeature[]
 
   @@index([lastName, firstName])
   @@map("patients")
@@ -353,4 +355,53 @@ model ConsentRecord {
   @@index([patientId])
   @@index([consentType, status])
   @@map("consent_records")
+}
+
+/// Computed daily metrics for a patient (one row per patient per day).
+model DailyMetric {
+  id                   String   @id @default(uuid())
+  patientId            String
+  date                 DateTime @db.Date
+  glucoseMean          Float?
+  glucoseStdDev        Float?
+  glucoseMin           Float?
+  glucoseMax           Float?
+  timeInRange          Float?
+  timeBelowRange       Float?
+  timeAboveRange       Float?
+  readingCount         Int      @default(0)
+  expectedReadingCount Int      @default(288)
+  totalInsulin         Float?
+  totalCarbs           Float?
+  activityMinutes      Float?
+  createdAt            DateTime @default(now())
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@unique([patientId, date])
+  @@index([patientId])
+  @@index([date])
+  @@map("daily_metrics")
+}
+
+/// Computed weekly feature vector for risk scoring (one row per patient per week).
+model WeeklyFeature {
+  id                    String   @id @default(uuid())
+  patientId             String
+  weekStart             DateTime @db.Date
+  avgGlucose            Float?
+  glucoseCV             Float?
+  avgTimeInRange        Float?
+  avgTimeBelowRange     Float?
+  adherenceScore        Float?
+  hypoglycemiaEpisodes  Int      @default(0)
+  hyperglycemiaEpisodes Int      @default(0)
+  createdAt             DateTime @default(now())
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@unique([patientId, weekStart])
+  @@index([patientId])
+  @@index([weekStart])
+  @@map("weekly_features")
 }

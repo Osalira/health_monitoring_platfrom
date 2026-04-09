@@ -115,12 +115,12 @@
 
 ## Epic 10 - Derived metrics and risk engine
 
-- [ ] Daily metrics computation added
-- [ ] Weekly features added
-- [ ] Risk heuristics added
-- [ ] Explainability factors added
-- [ ] Risk persistence added
-- [ ] UI integration completed
+- [x] Daily metrics computation added (computeDailyMetrics: glucose stats, TIR, insulin/carb/activity totals)
+- [x] Weekly features added (computeWeeklyFeatures: CV, avg TIR, adherence, hypo/hyper episodes)
+- [x] Risk heuristics added (computeRiskScore: 6 weighted factors → 0-100 score → tier)
+- [x] Explainability factors added (timeInRange, glucoseVariability, hba1c, adherence, hypoglycemia, dataRecency)
+- [x] Risk persistence added (DailyMetric, WeeklyFeature models + upsert orchestration)
+- [x] UI integration completed (POST /api/compute-metrics, existing risk-explanation uses same factors)
 
 ## Epic 11 - Care coordination and summaries
 

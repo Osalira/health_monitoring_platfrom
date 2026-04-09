@@ -3,14 +3,14 @@
 import { useState, useCallback } from 'react';
 import { DEFAULT_USER, findUserById, type MockUser } from '@t1d/auth';
 import { AppSidebar, MobileNav } from './app-sidebar';
+import { SiteHeader } from './site-header';
 
 interface AppShellProps {
   initialUserId?: string | undefined;
-  header: (props: { currentUser: MockUser; onSwitchUser: (id: string) => void }) => React.ReactNode;
   children: React.ReactNode;
 }
 
-export function AppShell({ initialUserId, header, children }: AppShellProps) {
+export function AppShell({ initialUserId, children }: AppShellProps) {
   const [currentUser, setCurrentUser] = useState<MockUser>(
     () => (initialUserId ? findUserById(initialUserId) : undefined) ?? DEFAULT_USER,
   );
@@ -26,7 +26,7 @@ export function AppShell({ initialUserId, header, children }: AppShellProps) {
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      {header({ currentUser, onSwitchUser: handleSwitchUser })}
+      <SiteHeader currentUser={currentUser} onSwitchUser={handleSwitchUser} />
       <MobileNav />
       <div className="flex flex-1">
         <AppSidebar />

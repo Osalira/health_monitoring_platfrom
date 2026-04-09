@@ -5,7 +5,6 @@ import { cookies } from 'next/headers';
 import { routing } from '@/i18n/routing';
 import { Providers } from '@/components/providers';
 import { AppShell } from '@/components/app-shell';
-import { SiteHeader } from '@/components/site-header';
 import '@/app/globals.css';
 
 export function generateStaticParams() {
@@ -32,15 +31,7 @@ export default async function LocaleLayout({
       <body className="min-h-screen bg-background font-sans antialiased">
         <Providers>
           <NextIntlClientProvider messages={messages}>
-            <AppShell
-              initialUserId={activeUserId}
-              header={({ currentUser, onSwitchUser }) => (
-                <SiteHeader
-                  currentUser={currentUser}
-                  onSwitchUser={onSwitchUser}
-                />
-              )}
-            >
+            <AppShell initialUserId={activeUserId}>
               {children}
             </AppShell>
           </NextIntlClientProvider>

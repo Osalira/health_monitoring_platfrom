@@ -599,5 +599,35 @@
 
 ### Check 4 - Quality gates pass
 
-- What to check: All CI commands pass (82 tests, 14/14 all commands)
+- What to check: All CI commands pass (94 tests, 14/14 all commands)
+- Expected result: Zero errors
+
+## Stage 10 - Derived metrics and risk engine
+
+### Check 1 - Daily metrics compute correctly
+
+- What to check: computeDailyMetrics produces correct glucose stats
+- How to check: Run `pnpm --filter @t1d/risk-engine test`
+- Expected result: 6 daily.test.ts tests pass (mean, stdDev, TIR, below/above range, event sums)
+
+### Check 2 - Risk score tiers are correct
+
+- What to check: computeRiskScore maps inputs to correct tiers
+- How to check: Run risk.test.ts tests
+- Expected result: Well-controlled → LOW, poorly controlled → HIGH/CRITICAL, all factors 0-1
+
+### Check 3 - Metrics recomputation API works (requires DB)
+
+- What to check: POST /api/compute-metrics triggers full pipeline
+- How to check:
+  ```bash
+  curl -X POST http://localhost:3000/api/compute-metrics \
+    -H "Content-Type: application/json" \
+    -d '{"patientId":"<id-from-db>"}'
+  ```
+- Expected result: 200 with dailyMetricsUpserted > 0, riskAssessmentCreated: true
+
+### Check 4 - Quality gates pass
+
+- What to check: All CI commands pass (94 tests, 14/14 all commands)
 - Expected result: Zero errors

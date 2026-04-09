@@ -34,3 +34,6 @@ export {
   type ObservationEvent,
   type IngestResult,
 } from './ingestion/index';
+
+// Metrics
+export { computePatientMetrics, type ComputeMetricsResult } from './metrics/index';

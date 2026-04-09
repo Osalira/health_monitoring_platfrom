@@ -359,3 +359,25 @@ Using an API route in the existing Next.js app avoids spinning up a separate API
 - each observation links back to its raw payload via `sourcePayloadId`
 - same sourceId sent twice returns 200 (duplicate) instead of creating duplicates
 - derived metric triggers are deferred to Epic 10
+
+## 2026-04-09 - Pure risk-engine computation + materialized DailyMetric/WeeklyFeature tables
+
+Status: Accepted
+
+### Decision
+
+Risk computation lives in `packages/risk-engine` as pure functions with zero database deps. The package exports `computeDailyMetrics`, `computeWeeklyFeatures`, and `computeRiskScore`. Results are persisted to `DailyMetric` and `WeeklyFeature` tables via an orchestrator in `packages/database/src/metrics/`.
+
+Risk score formula: 6 weighted factors (TIR 25%, glucose variability 20%, HbA1c 20%, adherence 15%, hypoglycemia 10%, data recency 10%) → 0-100 score → LOW/MODERATE/HIGH/CRITICAL tier.
+
+### Why
+
+Pure functions are fully testable without a database. Materialized tables enable fast dashboard queries. The orchestrator pattern separates concerns: risk-engine owns the math, database owns persistence.
+
+### Consequences
+
+- 12 unit tests validate all metric math without any DB
+- DailyMetric has unique constraint on (patientId, date) for idempotent upserts
+- WeeklyFeature has unique constraint on (patientId, weekStart)
+- Recomputation is triggered via `POST /api/compute-metrics`
+- Risk factors use the same structure as the existing risk-explanation UI component
