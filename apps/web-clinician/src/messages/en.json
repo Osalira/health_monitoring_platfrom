@@ -115,7 +115,22 @@
     "noAlerts": "No active alerts.",
     "noData": "No data available.",
     "due": "Due {date}",
-    "notFound": "Patient not found."
+    "notFound": "Patient not found.",
+    "factors": {
+      "timeInRange": "Time in Range",
+      "timeInRangeDesc": "Percentage of glucose readings between 70–180 mg/dL",
+      "glucoseVariability": "Glucose Variability",
+      "glucoseVariabilityDesc": "How much glucose values fluctuate (coefficient of variation)",
+      "hba1c": "HbA1c Level",
+      "hba1cDesc": "Long-term average blood sugar indicator",
+      "adherence": "Device Adherence",
+      "adherenceDesc": "Consistency of CGM wear and data upload",
+      "hypoglycemiaFrequency": "Hypoglycemia Frequency",
+      "hypoglycemiaFrequencyDesc": "Days with significant low glucose episodes",
+      "dataRecency": "Data Recency",
+      "dataRecencyDesc": "How current the available data is"
+    },
+    "riskExplainerNote": "Risk score is computed from the factors above. Higher values indicate greater contribution to risk."
   },
   "settings": {
     "title": "Settings",

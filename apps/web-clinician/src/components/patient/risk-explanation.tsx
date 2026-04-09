@@ -11,14 +11,14 @@ interface RiskExplanationProps {
   } | null;
 }
 
-const FACTOR_LABELS: Record<string, string> = {
-  timeInRange: 'Time in Range',
-  glucoseVariability: 'Glucose Variability',
-  hba1c: 'HbA1c Level',
-  adherence: 'Device Adherence',
-  hypoglycemiaFrequency: 'Hypoglycemia Frequency',
-  dataRecency: 'Data Recency',
-};
+const FACTOR_KEYS = [
+  'timeInRange',
+  'glucoseVariability',
+  'hba1c',
+  'adherence',
+  'hypoglycemiaFrequency',
+  'dataRecency',
+] as const;
 
 export function RiskExplanation({ risk }: RiskExplanationProps) {
   const t = useTranslations('patientDetail');
@@ -36,7 +36,11 @@ export function RiskExplanation({ risk }: RiskExplanationProps) {
     );
   }
 
-  const factors = Object.entries(risk.factors).sort(([, a], [, b]) => b - a);
+  // Sort factors by contribution (highest first), only show known keys
+  const factors = FACTOR_KEYS
+    .filter((key) => key in risk.factors)
+    .map((key) => ({ key, value: risk.factors[key] ?? 0 }))
+    .sort((a, b) => b.value - a.value);
 
   return (
     <Card>
@@ -48,16 +52,21 @@ export function RiskExplanation({ risk }: RiskExplanationProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
-          {factors.map(([key, value]) => (
+        <div className="space-y-4">
+          {factors.map(({ key, value }) => (
             <div key={key}>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">
-                  {FACTOR_LABELS[key] ?? key}
-                </span>
-                <span className="font-medium">{(value * 100).toFixed(0)}%</span>
+                <div>
+                  <span className="font-medium text-foreground">
+                    {t(`factors.${key}`)}
+                  </span>
+                  <p className="text-xs text-muted-foreground">
+                    {t(`factors.${key}Desc`)}
+                  </p>
+                </div>
+                <span className="shrink-0 font-semibold">{(value * 100).toFixed(0)}%</span>
               </div>
-              <div className="mt-1 h-2 overflow-hidden rounded-full bg-muted">
+              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted">
                 <div
                   className="h-full rounded-full bg-primary transition-all"
                   style={{ width: `${Math.min(100, value * 100)}%` }}
@@ -66,6 +75,9 @@ export function RiskExplanation({ risk }: RiskExplanationProps) {
             </div>
           ))}
         </div>
+        <p className="mt-4 text-xs text-muted-foreground">
+          {t('riskExplainerNote')}
+        </p>
       </CardContent>
     </Card>
   );

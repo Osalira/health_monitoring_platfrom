@@ -629,5 +629,22 @@
 
 ### Check 4 - Quality gates pass
 
-- What to check: All CI commands pass (94 tests, 14/14 all commands)
+- What to check: All CI commands pass (99 tests, 14/14 all commands)
+- Expected result: Zero errors
+
+## Stage 10b - Explainable risk engine polish
+
+### Check 1 - Risk factor labels are localized
+
+- What to check: Risk explanation shows translated factor labels + descriptions
+- How to check: Open patient detail, check EN labels, switch to FR
+- Expected result: EN labels ("Time in Range", etc.) with descriptions; FR labels ("Temps dans la cible", etc.)
+
+### Check 2 - High Risk KPI card is clickable
+
+- What to check: Clicking "High Risk" filters roster to HIGH tier
+- How to check: Click the card, verify URL and roster
+- Expected result: URL shows `?risk=HIGH`, only high-risk patients in roster
+
+### Check 3 - Quality gates pass (99 tests, 14/14)
 - Expected result: Zero errors

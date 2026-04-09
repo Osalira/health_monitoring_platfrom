@@ -85,4 +85,46 @@ describe('computeRiskScore', () => {
     expect(result.tier).toBeDefined();
     expect(result.score).toBeGreaterThanOrEqual(0);
   });
+
+  it('handles extreme CV (> 0.5) — clamps to max', () => {
+    const result = computeRiskScore({
+      weeklyFeatures: makeWeekly({ glucoseCV: 0.8 }),
+    });
+    expect(result.factors.glucoseVariability).toBe(1);
+  });
+
+  it('handles very low HbA1c (below 5.5) — clamps to 0', () => {
+    const result = computeRiskScore({
+      weeklyFeatures: makeWeekly(),
+      latestHbA1c: 4.5,
+    });
+    expect(result.factors.hba1c).toBe(0);
+  });
+
+  it('handles very high HbA1c (above 10.5) — clamps to 1', () => {
+    const result = computeRiskScore({
+      weeklyFeatures: makeWeekly(),
+      latestHbA1c: 12.0,
+    });
+    expect(result.factors.hba1c).toBe(1);
+  });
+
+  it('perfect adherence yields 0 adherence risk', () => {
+    const result = computeRiskScore({
+      weeklyFeatures: makeWeekly({ adherenceScore: 1.0 }),
+      deviceAdherence: 1.0,
+    });
+    expect(result.factors.adherence).toBe(0);
+  });
+
+  it('all 6 factors are present in result', () => {
+    const result = computeRiskScore({ weeklyFeatures: makeWeekly() });
+    const expectedKeys = [
+      'timeInRange', 'glucoseVariability', 'hba1c',
+      'adherence', 'hypoglycemiaFrequency', 'dataRecency',
+    ];
+    for (const key of expectedKeys) {
+      expect(result.factors).toHaveProperty(key);
+    }
+  });
 });

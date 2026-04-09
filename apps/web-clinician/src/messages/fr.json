@@ -115,7 +115,22 @@
     "noAlerts": "Aucune alerte active.",
     "noData": "Aucune donnée disponible.",
     "due": "Échéance {date}",
-    "notFound": "Patient introuvable."
+    "notFound": "Patient introuvable.",
+    "factors": {
+      "timeInRange": "Temps dans la cible",
+      "timeInRangeDesc": "Pourcentage de glycémies entre 70 et 180 mg/dL",
+      "glucoseVariability": "Variabilité glycémique",
+      "glucoseVariabilityDesc": "Amplitude des fluctuations de la glycémie (coefficient de variation)",
+      "hba1c": "Niveau d'HbA1c",
+      "hba1cDesc": "Indicateur de glycémie moyenne à long terme",
+      "adherence": "Observance du capteur",
+      "adherenceDesc": "Régularité du port du capteur et de l'envoi des données",
+      "hypoglycemiaFrequency": "Fréquence des hypoglycémies",
+      "hypoglycemiaFrequencyDesc": "Jours avec des épisodes significatifs de glycémie basse",
+      "dataRecency": "Fraîcheur des données",
+      "dataRecencyDesc": "Actualité des données disponibles"
+    },
+    "riskExplainerNote": "Le score de risque est calculé à partir des facteurs ci-dessus. Des valeurs plus élevées indiquent une contribution plus importante au risque."
   },
   "settings": {
     "title": "Paramètres",
