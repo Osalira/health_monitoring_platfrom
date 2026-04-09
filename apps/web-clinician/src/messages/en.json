@@ -92,7 +92,12 @@
     "riskScore": "Risk Score",
     "lastSync": "Last Sync",
     "devices": "Devices",
-    "glucoseTitle": "Glucose (14 days)",
+    "glucoseTitle": "Glucose",
+    "range": {
+      "7d": "7 days",
+      "14d": "14 days",
+      "30d": "30 days"
+    },
     "glucose": "Glucose",
     "noGlucoseData": "No glucose data available for this period.",
     "insulinTitle": "Insulin",

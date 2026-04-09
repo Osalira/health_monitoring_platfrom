@@ -339,3 +339,23 @@ Recharts is React-native, lightweight, SSR-safe, and the standard choice for Nex
 - glucose data is serialized as ISO strings for the client chart component
 - downsampling prevents performance issues with large datasets
 - chart tooltip and legend use semantic color tokens
+
+## 2026-04-09 - Ingestion via Next.js API route with Zod + idempotency
+
+Status: Accepted
+
+### Decision
+
+Implement ingestion as a Next.js API route (`POST /api/ingest`) in the web-clinician app. Payloads are validated with Zod, raw payloads are stored in a `RawPayload` model for traceability, events are normalized into `Observation` records, and idempotency is enforced via unique `sourceId`.
+
+### Why
+
+Using an API route in the existing Next.js app avoids spinning up a separate API service for MVP. The ingestion logic lives in `packages/database/src/ingestion/` so it's reusable if an API app is added later. Zod provides runtime validation matching the Prisma schema. The `sourceId` idempotency key prevents duplicate processing of the same payload.
+
+### Consequences
+
+- ingestion endpoint is co-located with the web app (acceptable for MVP)
+- raw payload is preserved with full JSON for debugging and reprocessing
+- each observation links back to its raw payload via `sourcePayloadId`
+- same sourceId sent twice returns 200 (duplicate) instead of creating duplicates
+- derived metric triggers are deferred to Epic 10

@@ -48,8 +48,11 @@ export interface PatientDetail {
   }[];
 }
 
-export async function getPatientDetail(id: string): Promise<PatientDetail | null> {
-  const fourteenDaysAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+export async function getPatientDetail(
+  id: string,
+  days = 14,
+): Promise<PatientDetail | null> {
+  const windowStart = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
   const patient = await prisma.patient.findUnique({
     where: { id },
@@ -92,22 +95,22 @@ export async function getPatientDetail(id: string): Promise<PatientDetail | null
   // Fetch observations in parallel
   const [glucose, insulin, meals, activity, labs] = await Promise.all([
     prisma.observation.findMany({
-      where: { patientId: id, type: 'GLUCOSE', observedAt: { gte: fourteenDaysAgo } },
+      where: { patientId: id, type: 'GLUCOSE', observedAt: { gte: windowStart } },
       orderBy: { observedAt: 'asc' },
       select: { observedAt: true, value: true },
     }),
     prisma.observation.findMany({
-      where: { patientId: id, type: 'INSULIN', observedAt: { gte: fourteenDaysAgo } },
+      where: { patientId: id, type: 'INSULIN', observedAt: { gte: windowStart } },
       orderBy: { observedAt: 'desc' },
       select: { observedAt: true, value: true, unit: true, subType: true },
     }),
     prisma.observation.findMany({
-      where: { patientId: id, type: 'CARBS', observedAt: { gte: fourteenDaysAgo } },
+      where: { patientId: id, type: 'CARBS', observedAt: { gte: windowStart } },
       orderBy: { observedAt: 'desc' },
       select: { observedAt: true, value: true },
     }),
     prisma.observation.findMany({
-      where: { patientId: id, type: 'ACTIVITY', observedAt: { gte: fourteenDaysAgo } },
+      where: { patientId: id, type: 'ACTIVITY', observedAt: { gte: windowStart } },
       orderBy: { observedAt: 'desc' },
       select: { observedAt: true, value: true, unit: true },
     }),

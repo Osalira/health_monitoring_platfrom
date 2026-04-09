@@ -1,9 +1,11 @@
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { getPatientDetail } from '@/lib/queries/patient-detail';
 import { PatientHeader } from '@/components/patient/patient-header';
 import { GlucoseChart } from '@/components/patient/glucose-chart';
+import { TimeRangeSelector } from '@/components/patient/time-range-selector';
 import { RecentEvents } from '@/components/patient/recent-events';
 import { RiskExplanation } from '@/components/patient/risk-explanation';
 import { TaskPanel } from '@/components/patient/task-panel';
@@ -12,22 +14,27 @@ import type { PatientDetail } from '@/lib/queries/patient-detail';
 
 export default async function PatientDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ days?: string }>;
 }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  const patient = await getPatientDetail(id);
+  const filters = await searchParams;
+  const days = filters.days ? parseInt(filters.days, 10) : 14;
+  const safeDays = [7, 14, 30].includes(days) ? days : 14;
+
+  const patient = await getPatientDetail(id, safeDays);
   if (!patient) notFound();
 
-  return <PatientDetailContent patient={patient} />;
+  return <PatientDetailContent patient={patient} days={safeDays} />;
 }
 
-function PatientDetailContent({ patient }: { patient: PatientDetail }) {
-  const _t = useTranslations('patientDetail');
+function PatientDetailContent({ patient, days }: { patient: PatientDetail; days: number }) {
+  const t = useTranslations('patientDetail');
 
-  // Serialize glucose for the client chart component
   const glucoseData = patient.glucose.map((g) => ({
     time: g.observedAt.toISOString(),
     value: g.value,
@@ -38,8 +45,15 @@ function PatientDetailContent({ patient }: { patient: PatientDetail }) {
       <PatientHeader patient={patient} />
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_300px]">
-        {/* Main content */}
         <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-foreground">
+              {t('glucoseTitle')} — {t(`range.${days}d`)}
+            </h2>
+            <Suspense fallback={null}>
+              <TimeRangeSelector />
+            </Suspense>
+          </div>
           <GlucoseChart data={glucoseData} />
           <RecentEvents
             insulin={patient.insulin}
@@ -50,7 +64,6 @@ function PatientDetailContent({ patient }: { patient: PatientDetail }) {
           <RiskExplanation risk={patient.risk} />
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-6">
           <TaskPanel tasks={patient.tasks} />
           <AlertPanel alerts={patient.alerts} />

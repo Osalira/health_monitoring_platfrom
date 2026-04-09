@@ -320,6 +320,22 @@ model AuditEvent {
   @@map("audit_events")
 }
 
+/// Raw ingestion payload for traceability.
+model RawPayload {
+  id         String   @id @default(uuid())
+  sourceId   String   @unique
+  sourceType String
+  patientId  String?
+  payload    Json
+  status     String   @default("processed")
+  eventCount Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@index([patientId])
+  @@index([sourceType])
+  @@map("raw_payloads")
+}
+
 /// Patient privacy or sharing consent state.
 model ConsentRecord {
   id          String        @id @default(uuid())

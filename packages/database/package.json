@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",
-    "@t1d/synthetic-data": "workspace:*"
+    "@t1d/synthetic-data": "workspace:*",
+    "zod": "^3.24.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

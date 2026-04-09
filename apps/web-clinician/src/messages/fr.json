@@ -92,7 +92,12 @@
     "riskScore": "Score de risque",
     "lastSync": "Dernière synchro",
     "devices": "Appareils",
-    "glucoseTitle": "Glycémie (14 jours)",
+    "glucoseTitle": "Glycémie",
+    "range": {
+      "7d": "7 jours",
+      "14d": "14 jours",
+      "30d": "30 jours"
+    },
     "glucose": "Glycémie",
     "noGlucoseData": "Aucune donnée de glycémie pour cette période.",
     "insulinTitle": "Insuline",

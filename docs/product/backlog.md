@@ -106,12 +106,12 @@
 
 ## Epic 9 - Ingestion and normalization
 
-- [ ] Ingestion entrypoints added
-- [ ] Payload validation added
-- [ ] Raw payload storage added
-- [ ] Normalized event flow added
-- [ ] Idempotency strategy added
-- [ ] Derived metric triggers added
+- [x] Ingestion entrypoints added (POST /api/ingest route in web-clinician)
+- [x] Payload validation added (Zod schemas for payload + events)
+- [x] Raw payload storage added (RawPayload model with sourceId idempotency key)
+- [x] Normalized event flow added (events → Observation records with sourcePayloadId traceability)
+- [x] Idempotency strategy added (unique sourceId check, duplicate returns 200)
+- [x] Derived metric triggers added (placeholder — ingestion completes, metrics recomputation is Epic 10)
 
 ## Epic 10 - Derived metrics and risk engine
 

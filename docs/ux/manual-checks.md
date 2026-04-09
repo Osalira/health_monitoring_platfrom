@@ -563,7 +563,41 @@
 - How to check:
   1. `pnpm lint` — 14/14
   2. `pnpm typecheck` — 14/14
-  3. `pnpm test` — 14/14 (75 real tests)
+  3. `pnpm test` — 14/14 (82 real tests)
   4. `pnpm build` — 14/14
 - Expected result:
   - Zero errors across all commands
+
+## Stage 8b - Time-range selector
+
+### Check 1 - Time-range buttons appear on patient detail
+
+- What to check: 7d/14d/30d buttons above glucose chart
+- How to check: Open any patient detail page
+- Expected result:
+  - Three buttons visible, 14d default, URL updates on click, chart range changes
+
+## Stage 9 - Ingestion and normalization
+
+### Check 1 - Ingestion endpoint accepts valid payload (requires DB)
+
+- What to check: POST /api/ingest creates observations
+- How to check: Send valid JSON payload with curl
+- Expected result: 201 with created status and observation count
+
+### Check 2 - Idempotency works
+
+- What to check: Same sourceId returns duplicate
+- How to check: Send same payload twice
+- Expected result: First 201, second 200 with duplicate status
+
+### Check 3 - Validation rejects bad payloads
+
+- What to check: Invalid payloads return 400
+- How to check: POST with empty sourceId or invalid event type
+- Expected result: 400 with Zod validation error details
+
+### Check 4 - Quality gates pass
+
+- What to check: All CI commands pass (82 tests, 14/14 all commands)
+- Expected result: Zero errors
