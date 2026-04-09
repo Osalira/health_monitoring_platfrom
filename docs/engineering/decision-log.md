@@ -320,3 +320,22 @@ Server components with direct DB access is the simplest correct approach for a m
 - queries are co-located in `src/lib/queries/` for reuse
 - filter state lives in URL params, not client state
 - if an API layer is needed later (e.g., for mobile), extract queries into API routes at that point
+
+## 2026-04-09 - Recharts for glucose charting
+
+Status: Accepted
+
+### Decision
+
+Use Recharts for the longitudinal glucose chart. Render a 14-day LineChart with target range reference lines (70 and 180 mg/dL). Downsample to ~500 points for performance. Use CSS variable tokens (`hsl(var(--chart-1))`) for colors so the chart works in both themes.
+
+### Why
+
+Recharts is React-native, lightweight, SSR-safe, and the standard choice for Next.js. It supports responsive containers and custom styling. The CSS variable approach makes dark mode work without separate chart themes.
+
+### Consequences
+
+- recharts is a new runtime dependency (~45KB gzipped)
+- glucose data is serialized as ISO strings for the client chart component
+- downsampling prevents performance issues with large datasets
+- chart tooltip and legend use semantic color tokens

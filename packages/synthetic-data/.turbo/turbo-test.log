@@ -5,14 +5,14 @@
 
 [1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/osali/OneDrive/Bureau/ConsultantITBusiness/healthplatform/t1d-command-center/packages/synthetic-data[39m
 
- [32m✓[39m src/__tests__/patient.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 18[2mms[22m[39m
- [32m✓[39m src/__tests__/rng.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 205[2mms[22m[39m
- [32m✓[39m src/__tests__/glucose.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 720[2mms[22m[39m
-   [33m[2m✓[22m[39m generateGlucoseReadings[2m > [22mglucose values stay in physiological range [33m 639[2mms[22m[39m
- [32m✓[39m src/__tests__/pipeline.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 412[2mms[22m[39m
+ [32m✓[39m src/__tests__/rng.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 141[2mms[22m[39m
+ [32m✓[39m src/__tests__/patient.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/__tests__/glucose.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 666[2mms[22m[39m
+   [33m[2m✓[22m[39m generateGlucoseReadings[2m > [22mglucose values stay in physiological range [33m 595[2mms[22m[39m
+ [32m✓[39m src/__tests__/pipeline.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 331[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
 [2m      Tests [22m [1m[32m20 passed[39m[22m[90m (20)[39m
-[2m   Start at [22m 11:26:55
-[2m   Duration [22m 6.07s[2m (transform 1.24s, setup 0ms, collect 2.07s, tests 1.36s, environment 2ms, prepare 8.70s)[22m
+[2m   Start at [22m 11:41:27
+[2m   Duration [22m 5.86s[2m (transform 1.89s, setup 0ms, collect 3.52s, tests 1.15s, environment 3ms, prepare 11.06s)[22m
 

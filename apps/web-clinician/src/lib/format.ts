@@ -60,3 +60,61 @@ export function formatHbA1c(value: number | null | undefined): string {
   if (value == null) return '—';
   return `${value.toFixed(1)}%`;
 }
+
+/** Format a date as short locale string (e.g., "Apr 9, 2026"). */
+export function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+/** Format a date as short date + time (e.g., "Apr 9, 10:30 AM"). */
+export function formatDateTime(date: Date): string {
+  return date.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+/** Format glucose value with unit. */
+export function formatGlucose(value: number): string {
+  return `${Math.round(value)} mg/dL`;
+}
+
+/** Map priority to badge variant. */
+export function priorityVariant(
+  priority: string,
+): 'default' | 'secondary' | 'destructive' | 'outline' {
+  switch (priority) {
+    case 'URGENT':
+      return 'destructive';
+    case 'HIGH':
+      return 'destructive';
+    case 'MEDIUM':
+      return 'default';
+    case 'LOW':
+      return 'secondary';
+    default:
+      return 'outline';
+  }
+}
+
+/** Map alert severity to badge variant. */
+export function severityVariant(
+  severity: string,
+): 'default' | 'secondary' | 'destructive' | 'outline' {
+  switch (severity) {
+    case 'CRITICAL':
+      return 'destructive';
+    case 'WARNING':
+      return 'default';
+    case 'INFO':
+      return 'secondary';
+    default:
+      return 'outline';
+  }
+}

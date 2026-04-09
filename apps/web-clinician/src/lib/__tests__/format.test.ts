@@ -5,6 +5,10 @@ import {
   riskTierVariant,
   formatScore,
   formatHbA1c,
+  formatGlucose,
+  formatDate,
+  priorityVariant,
+  severityVariant,
 } from '../format';
 
 describe('formatAge', () => {
@@ -88,5 +92,43 @@ describe('formatHbA1c', () => {
 
   it('returns dash for undefined', () => {
     expect(formatHbA1c(undefined)).toBe('—');
+  });
+});
+
+describe('formatGlucose', () => {
+  it('rounds and adds unit', () => {
+    expect(formatGlucose(123.7)).toBe('124 mg/dL');
+  });
+});
+
+describe('formatDate', () => {
+  it('formats a date', () => {
+    const result = formatDate(new Date('2026-04-09'));
+    expect(result).toContain('2026');
+    expect(result).toContain('Apr');
+  });
+});
+
+describe('priorityVariant', () => {
+  it('maps URGENT to destructive', () => {
+    expect(priorityVariant('URGENT')).toBe('destructive');
+  });
+  it('maps MEDIUM to default', () => {
+    expect(priorityVariant('MEDIUM')).toBe('default');
+  });
+  it('maps LOW to secondary', () => {
+    expect(priorityVariant('LOW')).toBe('secondary');
+  });
+});
+
+describe('severityVariant', () => {
+  it('maps CRITICAL to destructive', () => {
+    expect(severityVariant('CRITICAL')).toBe('destructive');
+  });
+  it('maps WARNING to default', () => {
+    expect(severityVariant('WARNING')).toBe('default');
+  });
+  it('maps INFO to secondary', () => {
+    expect(severityVariant('INFO')).toBe('secondary');
   });
 });

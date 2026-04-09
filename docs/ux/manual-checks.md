@@ -472,7 +472,98 @@
 - How to check:
   1. `pnpm lint` — 14/14
   2. `pnpm typecheck` — 14/14
-  3. `pnpm test` — 14/14 (68 real tests)
+  3. `pnpm test` — 14/14 (75 real tests)
+  4. `pnpm build` — 14/14
+- Expected result:
+  - Zero errors across all commands
+
+## Stage 8 - Patient detail experience
+
+### Check 1 - Patient header displays correct data
+
+- What to check: Patient header shows demographics, risk, devices, HbA1c
+- How to check:
+  1. From dashboard, click any patient name
+  2. Verify: name, age, diagnosis date, language, devices, HbA1c, risk badge, sync status
+- Expected result:
+  - All fields populated for seeded patients
+  - Back link returns to dashboard
+
+### Check 2 - Glucose chart renders
+
+- What to check: 14-day glucose LineChart renders with data
+- How to check:
+  1. Open a well-controlled patient → smooth trace around 130 mg/dL
+  2. Open a high-risk patient → volatile trace with highs
+  3. Open a newly-diagnosed patient → shorter trace
+- Expected result:
+  - Chart shows target range lines (70, 180 mg/dL)
+  - Tooltip shows value on hover
+  - Chart renders in both light and dark mode
+
+### Check 3 - Supporting context sections display
+
+- What to check: Insulin, meals, activity, labs show recent events
+- How to check:
+  1. Scroll below glucose chart
+  2. Verify 2×2 grid of event cards
+- Expected result:
+  - Insulin shows bolus/basal events with doses
+  - Meals show carb entries in grams
+  - Activity shows duration
+  - Labs show HbA1c values
+
+### Check 4 - Risk explanation shows factors
+
+- What to check: Risk factor bars display correctly
+- How to check:
+  1. Scroll to Risk Assessment section
+  2. Verify score, tier badge, factor progress bars
+- Expected result:
+  - Factors sorted by contribution (highest first)
+  - Progress bars reflect normalized values
+
+### Check 5 - Task and alert sidebar
+
+- What to check: Open tasks and active alerts display in sidebar
+- How to check:
+  1. Check right sidebar on desktop
+  2. Verify task count badge, priority badges, due dates
+  3. Verify alert severity badges, explanations
+- Expected result:
+  - High-risk patients have more tasks/alerts
+  - Well-controlled patients have fewer
+
+### Check 6 - Sparse data handling
+
+- What to check: Sections with no data show graceful fallback
+- How to check:
+  1. If a patient has no activity data, activity card shows "No data available"
+  2. If no glucose, chart shows empty message
+- Expected result:
+  - No broken layouts or empty cards without explanation
+
+### Check 7 - Patient detail localizes to French
+
+- What to check: All text in French
+- How to check: Switch to FR, verify all section titles, labels, empty states
+- Expected result:
+  - "Glycémie (14 jours)", "Insuline", "Repas", "Activité", "Résultats de laboratoire"
+
+### Check 8 - Chart works in dark mode
+
+- What to check: Glucose chart is readable in dark mode
+- How to check: Toggle dark, check chart grid, lines, tooltip
+- Expected result:
+  - Grid lines use border token, text uses muted-foreground, tooltip has card background
+
+### Check 9 - Quality gates pass
+
+- What to check: All CI commands pass
+- How to check:
+  1. `pnpm lint` — 14/14
+  2. `pnpm typecheck` — 14/14
+  3. `pnpm test` — 14/14 (75 real tests)
   4. `pnpm build` — 14/14
 - Expected result:
   - Zero errors across all commands

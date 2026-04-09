@@ -97,12 +97,12 @@
 
 ## Epic 8 - Patient detail experience
 
-- [ ] Patient header and summary added
-- [ ] Longitudinal charting added
-- [ ] Supporting context sections added
-- [ ] Recent changes panel added
-- [ ] Task/alert panel added
-- [ ] Sparse data handling added
+- [x] Patient header and summary added (name, age, dx date, devices, HbA1c, risk, sync status)
+- [x] Longitudinal charting added (14-day glucose LineChart via Recharts, dark-mode aware)
+- [x] Supporting context sections added (insulin, meals, activity, labs in 2×2 grid)
+- [x] Recent changes panel added (risk explanation with factor bars)
+- [x] Task/alert panel added (sidebar with open tasks + active alerts, priority/severity badges)
+- [x] Sparse data handling added (inline "no data" messages per section, empty chart state)
 
 ## Epic 9 - Ingestion and normalization
 
