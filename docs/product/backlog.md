@@ -88,12 +88,12 @@
 
 ## Epic 7 - Clinician dashboard
 
-- [ ] KPI cards implemented
-- [ ] Patient roster implemented
-- [ ] Filtering/search added
-- [ ] Sync status added
-- [ ] Risk display integrated
-- [ ] Loading/error/empty states complete
+- [x] KPI cards implemented (Total Patients, High Risk, Pending Tasks, Active Alerts — real DB queries)
+- [x] Patient roster implemented (table with name, age, risk, score, HbA1c, sync, tasks, alerts)
+- [x] Filtering/search added (text search by name, risk tier filter buttons, URL params)
+- [x] Sync status added (relative time + color-coded dot: green/yellow/red)
+- [x] Risk display integrated (RiskBadge component, color-coded by tier)
+- [x] Loading/error/empty states complete (Skeleton loading, EmptyState, error.tsx)
 
 ## Epic 8 - Patient detail experience
 

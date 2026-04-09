@@ -301,3 +301,22 @@ The dashboard demo needs visible variety. Each archetype produces a distinct cli
 - 30 patients (6 per archetype) gives a realistic population spread
 - dashboard KPIs have non-trivial values
 - patient detail views show meaningfully different trajectories
+
+## 2026-04-09 - Server-component database queries for dashboard
+
+Status: Accepted
+
+### Decision
+
+The clinician dashboard fetches data via direct Prisma queries in Next.js server components. No API routes or data-fetching layer is needed — server components call `prisma.patient.findMany()` etc. directly. Filters are passed via URL search params.
+
+### Why
+
+Server components with direct DB access is the simplest correct approach for a monolith. It avoids unnecessary API abstraction, keeps the code co-located with the UI, and leverages Next.js streaming for progressive loading. URL search params make filters server-compatible and shareable.
+
+### Consequences
+
+- no API routes to maintain for the dashboard
+- queries are co-located in `src/lib/queries/` for reuse
+- filter state lives in URL params, not client state
+- if an API layer is needed later (e.g., for mobile), extract queries into API routes at that point

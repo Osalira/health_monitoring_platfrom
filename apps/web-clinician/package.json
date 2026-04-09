@@ -9,10 +9,11 @@
     "start": "next start",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
-    "test": "echo \"no tests yet\""
+    "test": "vitest run"
   },
   "dependencies": {
     "@t1d/auth": "workspace:*",
+    "@t1d/database": "workspace:*",
     "@t1d/i18n": "workspace:*",
     "@t1d/types": "workspace:*",
     "@t1d/ui": "workspace:*",
@@ -27,6 +28,7 @@
     "@types/node": "25.5.2",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "vitest": "^3.0.0",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17"

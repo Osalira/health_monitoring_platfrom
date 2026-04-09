@@ -5,7 +5,7 @@
    ▲ Next.js 15.5.15
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 5.1s
+ ✓ Compiled successfully in 19.2s
    Linting and checking validity of types ...
 
  ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
@@ -20,7 +20,7 @@
 
 Route (app)                                 Size  First Load JS
 ┌ ○ /_not-found                            993 B         103 kB
-├ ● /[locale]                            1.14 kB         150 kB
+├ ● /[locale]                            3.44 kB         157 kB
 ├   ├ /en
 ├   └ /fr
 ├ ● /[locale]/patients                   1.14 kB         150 kB

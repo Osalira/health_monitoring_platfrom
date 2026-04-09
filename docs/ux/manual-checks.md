@@ -420,3 +420,59 @@
   4. `pnpm build` — 14/14
 - Expected result:
   - Zero errors across all commands
+
+## Stage 7 - Clinician dashboard
+
+### Check 1 - KPI cards show real data
+
+- What to check: Dashboard KPI cards display actual counts from the database
+- How to check:
+  1. Ensure database is seeded
+  2. Run `pnpm --filter @t1d/web-clinician dev`
+  3. Open `http://localhost:3000`
+- Expected result:
+  - Total Patients: 30, High Risk: 12, Pending Tasks: ~96, Active Alerts: ~30+
+  - Each card has an icon and the count is a number, not "—"
+
+### Check 2 - Patient roster table displays
+
+- What to check: Table shows patients with correct data columns
+- How to check:
+  1. Scroll below KPI cards
+  2. Verify columns: Name, Age, Risk, Score, HbA1c, Last Sync, Tasks, Alerts
+- Expected result:
+  - Names are clickable links, risk badges color-coded, sync has colored dot
+
+### Check 3 - Search and filter work
+
+- What to check: Filtering narrows the roster
+- How to check:
+  1. Search by name — table filters
+  2. Click risk tier buttons — only matching patients show
+  3. Click "All" to reset
+- Expected result:
+  - Filters use URL params, work with server rendering
+
+### Check 4 - Dashboard localizes to French
+
+- What to check: All text in French when locale is FR
+- How to check: Switch to French, verify roster headers, KPI labels, filter buttons
+- Expected result:
+  - "Nom", "Âge", "Risque", "Score", "Dernière synchro", "Tous/Faible/Modéré/Élevé/Critique"
+
+### Check 5 - Dashboard works in dark mode
+
+- What to check: All elements render in dark mode
+- How to check: Toggle dark, check cards, table, badges, sync dots
+- Expected result: Semantic tokens, visible badges, correct hover states
+
+### Check 6 - Quality gates pass
+
+- What to check: All CI commands pass
+- How to check:
+  1. `pnpm lint` — 14/14
+  2. `pnpm typecheck` — 14/14
+  3. `pnpm test` — 14/14 (68 real tests)
+  4. `pnpm build` — 14/14
+- Expected result:
+  - Zero errors across all commands

@@ -1,27 +1,43 @@
+import { Suspense } from 'react';
 import { useTranslations } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
-import { Card, CardContent, CardHeader, CardTitle, Badge } from '@t1d/ui';
+import { Skeleton } from '@t1d/ui';
+import { getDashboardKpis } from '@/lib/queries/dashboard';
+import { getPatientRoster } from '@/lib/queries/patients';
+import { KpiCards } from '@/components/dashboard/kpi-cards';
+import { PatientRoster } from '@/components/dashboard/patient-roster';
+import { RosterFilters } from '@/components/dashboard/roster-filters';
 
 export default async function DashboardPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ search?: string; risk?: string }>;
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <DashboardContent />;
+  const filters = await searchParams;
+  const [kpis, patients] = await Promise.all([
+    getDashboardKpis(),
+    getPatientRoster({
+      search: filters.search,
+      riskTier: filters.risk,
+    }),
+  ]);
+
+  return <DashboardContent kpis={kpis} patients={patients} />;
 }
 
-function DashboardContent() {
+function DashboardContent({
+  kpis,
+  patients,
+}: {
+  kpis: Awaited<ReturnType<typeof getDashboardKpis>>;
+  patients: Awaited<ReturnType<typeof getPatientRoster>>;
+}) {
   const t = useTranslations('dashboard');
-
-  const kpis = [
-    { key: 'totalPatients' as const, value: '—' },
-    { key: 'highRisk' as const, value: '—' },
-    { key: 'pendingTasks' as const, value: '—' },
-    { key: 'recentAlerts' as const, value: '—' },
-  ];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -31,20 +47,15 @@ function DashboardContent() {
         </h1>
         <p className="text-muted-foreground">{t('description')}</p>
       </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {kpis.map((kpi) => (
-          <Card key={kpi.key}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {t(`kpi.${kpi.key}`)}
-              </CardTitle>
-              <Badge variant="secondary">{kpi.value}</Badge>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{kpi.value}</div>
-            </CardContent>
-          </Card>
-        ))}
+
+      <KpiCards kpis={kpis} />
+
+      <div className="mt-8 space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">{t('roster.title')}</h2>
+        <Suspense fallback={<Skeleton className="h-10 w-full" />}>
+          <RosterFilters />
+        </Suspense>
+        <PatientRoster patients={patients} />
       </div>
     </div>
   );

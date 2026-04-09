@@ -52,7 +52,26 @@
       "totalPatients": "Total patients",
       "highRisk": "Risque élevé",
       "pendingTasks": "Tâches en attente",
-      "recentAlerts": "Alertes récentes"
+      "recentAlerts": "Alertes actives"
+    },
+    "roster": {
+      "title": "Liste des patients",
+      "name": "Nom",
+      "age": "Âge",
+      "risk": "Risque",
+      "score": "Score",
+      "hba1c": "HbA1c",
+      "lastSync": "Dernière synchro",
+      "tasks": "Tâches",
+      "alerts": "Alertes",
+      "searchPlaceholder": "Rechercher un patient…"
+    },
+    "riskTiers": {
+      "ALL": "Tous",
+      "LOW": "Faible",
+      "MODERATE": "Modéré",
+      "HIGH": "Élevé",
+      "CRITICAL": "Critique"
     }
   },
   "patients": {
