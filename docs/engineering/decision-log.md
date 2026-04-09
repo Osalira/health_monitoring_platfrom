@@ -246,3 +246,58 @@ These fields are inherently polymorphic — risk factors, observation metadata, 
 - these fields are not queryable via SQL column operations (use Postgres JSONB operators or filter in application code)
 - type safety for Json field contents comes from application-level Zod validation (not Prisma)
 - schema is simpler and more extensible
+
+## 2026-04-09 - Synthetic data in packages/synthetic-data, pure generators
+
+Status: Accepted
+
+### Decision
+
+Place all synthetic data generation logic in `packages/synthetic-data` as pure functions that return plain objects. The package has zero database dependency — it generates data structures that the seed script in `packages/database/prisma/seed.ts` persists via Prisma.
+
+### Why
+
+Keeping generation separate from persistence makes generators testable without a database, reusable for different persistence strategies, and easy to modify without touching DB code. The seed script is the only integration point.
+
+### Consequences
+
+- `@t1d/synthetic-data` is testable in isolation (20 unit tests, no DB needed)
+- `packages/database` depends on `@t1d/synthetic-data`, not the reverse
+- adding new event types or archetypes doesn't require schema changes
+- seed pipeline handles batch inserts for performance
+
+## 2026-04-09 - Deterministic PRNG with mulberry32
+
+Status: Accepted
+
+### Decision
+
+Use a mulberry32-based seeded PRNG instead of `Math.random()`. Each patient story is seeded from `baseSeed + index * 1000`, making all generated data deterministic.
+
+### Why
+
+Deterministic generation makes demos repeatable, tests stable, and debugging reproducible. No external PRNG library is needed — mulberry32 is 6 lines of code with excellent distribution properties.
+
+### Consequences
+
+- same seed always produces same patients, observations, and clinical events
+- different base seeds produce entirely different datasets
+- tests can assert exact values without flakiness
+
+## 2026-04-09 - Five patient archetypes for demo stories
+
+Status: Accepted
+
+### Decision
+
+Define 5 archetypes that drive all generation: well-controlled, declining, high-risk, newly-diagnosed, non-adherent. Each archetype configures glucose mean/stdDev, CGM coverage, risk tier, alert/task counts, HbA1c, and device presence.
+
+### Why
+
+The dashboard demo needs visible variety. Each archetype produces a distinct clinical story that exercises different UI pathways: the "model patient" shows low risk, "declining" triggers review, "high-risk" shows urgent alerts, "newly-diagnosed" has sparse data, and "non-adherent" shows device disconnects.
+
+### Consequences
+
+- 30 patients (6 per archetype) gives a realistic population spread
+- dashboard KPIs have non-trivial values
+- patient detail views show meaningfully different trajectories

@@ -352,7 +352,7 @@
   4. Run `pnpm --filter @t1d/database db:seed`
 - Expected result:
   - Schema pushes cleanly
-  - Seed creates 3 users, 1 patient, 1 device, 1 task
+  - Seed creates 3 users, 30 patients, ~60 devices, ~270K observations
   - `pnpm --filter @t1d/database db:studio` shows populated tables
 
 ### Check 5 - Quality gates pass
@@ -361,7 +361,62 @@
 - How to check:
   1. `pnpm lint` — 14/14
   2. `pnpm typecheck` — 14/14
-  3. `pnpm test` — 14/14 (31 real tests: 15 auth + 10 UI + 3 i18n + 3 database)
+  3. `pnpm test` — 14/14 (51 real tests: 15 auth + 10 UI + 3 i18n + 3 database + 20 synthetic-data)
+  4. `pnpm build` — 14/14
+- Expected result:
+  - Zero errors across all commands
+
+## Stage 6 - Synthetic data system
+
+### Check 1 - Generators produce deterministic output
+
+- What to check: Same seed produces same data
+- How to check:
+  1. Run `pnpm --filter @t1d/synthetic-data test`
+  2. Look for RNG determinism and pipeline determinism tests
+- Expected result:
+  - 20 tests pass across 4 test files (rng, patient, glucose, pipeline)
+  - Same seed + index produces identical patient names, glucose values, risk scores
+
+### Check 2 - Archetypes produce distinct clinical stories
+
+- What to check: Each archetype generates visibly different data
+- How to check:
+  1. Check pipeline test "archetype drives data characteristics"
+  2. Well-controlled: LOW risk, 0 alerts, 1 task
+  3. High-risk: CRITICAL risk, 4 alerts, 5 tasks
+  4. Non-adherent: fewer glucose readings (45% coverage)
+- Expected result:
+  - Archetypes differ in glucose count, alert count, risk tier
+
+### Check 3 - Glucose readings are physiologically plausible
+
+- What to check: Values stay in realistic range
+- How to check:
+  1. Check glucose test "glucose values stay in physiological range"
+  2. All values must be 40-400 mg/dL
+- Expected result:
+  - No values outside 40-400 mg/dL across any archetype
+
+### Check 4 - Seed pipeline creates complete dataset (requires Postgres)
+
+- What to check: Full seed runs and populates all tables
+- How to check:
+  1. Run `pnpm --filter @t1d/database db:push && pnpm --filter @t1d/database db:seed`
+  2. Check console output for counts
+- Expected result:
+  - 3 users, 30 patients, ~60 devices
+  - ~270K observations (glucose + insulin + meals + activity + labs)
+  - 30 risk assessments
+  - Multiple alerts and tasks per high-risk patients
+
+### Check 5 - Quality gates pass
+
+- What to check: All commands pass
+- How to check:
+  1. `pnpm lint` — 14/14
+  2. `pnpm typecheck` — 14/14
+  3. `pnpm test` — 14/14 (51 real tests)
   4. `pnpm build` — 14/14
 - Expected result:
   - Zero errors across all commands

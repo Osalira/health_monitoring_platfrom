@@ -108,6 +108,9 @@ importers:
       '@prisma/client':
         specifier: ^6.9.0
         version: 6.19.3(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)
+      '@t1d/synthetic-data':
+        specifier: workspace:*
+        version: link:../synthetic-data
     devDependencies:
       '@types/node':
         specifier: ^22.0.0
@@ -136,7 +139,11 @@ importers:
 
   packages/summary-engine: {}
 
-  packages/synthetic-data: {}
+  packages/synthetic-data:
+    devDependencies:
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@25.5.2)(jiti@2.6.1)(jsdom@26.1.0)(tsx@4.21.0)
 
   packages/types: {}
 

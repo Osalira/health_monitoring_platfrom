@@ -19,7 +19,8 @@
     "db:reset": "prisma migrate reset"
   },
   "dependencies": {
-    "@prisma/client": "^6.9.0"
+    "@prisma/client": "^6.9.0",
+    "@t1d/synthetic-data": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

@@ -80,11 +80,11 @@
 
 ## Epic 6 - Synthetic data system
 
-- [ ] Patient generator added
-- [ ] Device/event generation added
-- [ ] Archetypes documented
-- [ ] Deterministic seed support added
-- [ ] Seed pipeline populates credible data
+- [x] Patient generator added (demographics from name pools, seeded RNG)
+- [x] Device/event generation added (glucose, insulin, meals, activity, labs, alerts, tasks, risk)
+- [x] Archetypes documented (5: well-controlled, declining, high-risk, newly-diagnosed, non-adherent)
+- [x] Deterministic seed support added (mulberry32 PRNG, same seed = same output)
+- [x] Seed pipeline populates credible data (30 patients, ~270K observations, batch insert)
 
 ## Epic 7 - Clinician dashboard
 

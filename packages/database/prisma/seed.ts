@@ -1,20 +1,20 @@
 /**
  * Database seed script.
  *
- * Creates minimal demo data for local development.
- * Synthetic patient data generation is handled separately in Epic 6.
+ * Creates demo users, then generates 30 synthetic patients (6 per archetype)
+ * with full clinical data using the @t1d/synthetic-data pipeline.
  *
  * Usage: pnpm --filter @t1d/database db:seed
  */
 
 import { PrismaClient } from '@prisma/client';
+import { generateAllStories, type PatientStory } from '@t1d/synthetic-data';
 
 const prisma = new PrismaClient();
 
-async function main() {
-  console.log('Seeding database...');
+async function seedUsers() {
+  console.log('Creating demo users...');
 
-  // Create demo clinician user (matches packages/auth demo user)
   const clinician = await prisma.user.upsert({
     where: { email: 'dr.chen@t1d-clinic.demo' },
     update: {},
@@ -28,7 +28,6 @@ async function main() {
     },
   });
 
-  // Create demo educator user
   const educator = await prisma.user.upsert({
     where: { email: 'marc.dupont@t1d-clinic.demo' },
     update: {},
@@ -42,7 +41,6 @@ async function main() {
     },
   });
 
-  // Create demo admin user
   await prisma.user.upsert({
     where: { email: 'admin@t1d-clinic.demo' },
     update: {},
@@ -56,55 +54,177 @@ async function main() {
     },
   });
 
-  // Create a sample patient
+  return { clinician, educator };
+}
+
+async function seedStory(
+  story: PatientStory,
+  clinicianId: string,
+  educatorId: string,
+) {
+  // Create patient
   const patient = await prisma.patient.upsert({
-    where: { externalRef: 'demo-patient-001' },
+    where: { externalRef: story.patient.externalRef },
     update: {},
     create: {
-      externalRef: 'demo-patient-001',
-      firstName: 'Alex',
-      lastName: 'Martin',
-      birthDate: new Date('2005-03-15'),
-      sexAtBirth: 'M',
-      diagnosisDate: new Date('2012-09-01'),
-      primaryLanguage: 'en',
+      externalRef: story.patient.externalRef,
+      firstName: story.patient.firstName,
+      lastName: story.patient.lastName,
+      birthDate: story.patient.birthDate,
+      sexAtBirth: story.patient.sexAtBirth,
+      diagnosisDate: story.patient.diagnosisDate,
+      primaryLanguage: story.patient.primaryLanguage,
     },
   });
 
-  // Create a sample device
-  await prisma.device.upsert({
-    where: { sourceKey: 'demo-cgm-001' },
-    update: {},
-    create: {
+  // Create devices
+  for (const d of story.devices) {
+    await prisma.device.upsert({
+      where: { sourceKey: d.sourceKey },
+      update: {},
+      create: {
+        patientId: patient.id,
+        type: d.type,
+        manufacturer: d.manufacturer,
+        model: d.model,
+        sourceKey: d.sourceKey,
+        status: d.status,
+        lastSyncedAt: d.lastSyncedAt,
+      },
+    });
+  }
+
+  // Batch insert observations (glucose + insulin + meals + activity + labs)
+  const allObs = [
+    ...story.glucose.map((o) => ({
       patientId: patient.id,
-      type: 'CGM',
-      manufacturer: 'Dexcom',
-      model: 'G7',
-      sourceKey: 'demo-cgm-001',
-      status: 'ACTIVE',
-      lastSyncedAt: new Date(),
-    },
-  });
+      type: o.type as 'GLUCOSE',
+      value: o.value,
+      unit: o.unit,
+      observedAt: o.observedAt,
+      sourceType: o.sourceType,
+    })),
+    ...story.insulin.map((o) => ({
+      patientId: patient.id,
+      type: o.type as 'INSULIN',
+      value: o.value,
+      unit: o.unit,
+      observedAt: o.observedAt,
+      sourceType: o.sourceType,
+      metadata: o.metadata,
+    })),
+    ...story.meals.map((o) => ({
+      patientId: patient.id,
+      type: o.type as 'CARBS',
+      value: o.value,
+      unit: o.unit,
+      observedAt: o.observedAt,
+      sourceType: o.sourceType,
+    })),
+    ...story.activity.map((o) => ({
+      patientId: patient.id,
+      type: o.type as 'ACTIVITY',
+      value: o.value,
+      unit: o.unit,
+      observedAt: o.observedAt,
+      sourceType: o.sourceType,
+      metadata: o.metadata,
+    })),
+    ...story.labs.map((o) => ({
+      patientId: patient.id,
+      type: o.type as 'LAB',
+      value: o.value,
+      unit: o.unit,
+      observedAt: o.observedAt,
+      sourceType: o.sourceType,
+      metadata: o.metadata,
+    })),
+  ];
 
-  // Create a sample task
-  await prisma.task.create({
+  // Insert in chunks to avoid overwhelming Postgres
+  const CHUNK = 5000;
+  for (let i = 0; i < allObs.length; i += CHUNK) {
+    await prisma.observation.createMany({
+      data: allObs.slice(i, i + CHUNK),
+    });
+  }
+
+  // Create alerts
+  for (const a of story.alerts) {
+    await prisma.alert.create({
+      data: {
+        patientId: patient.id,
+        type: a.type,
+        severity: a.severity,
+        status: a.status,
+        triggeredAt: a.triggeredAt,
+        explanation: a.explanation,
+      },
+    });
+  }
+
+  // Create tasks
+  for (const t of story.tasks) {
+    await prisma.task.create({
+      data: {
+        patientId: patient.id,
+        title: t.title,
+        description: t.description,
+        status: t.status,
+        priority: t.priority,
+        assignedToUserId: clinicianId,
+        createdByUserId: educatorId,
+        dueAt: t.dueAt,
+      },
+    });
+  }
+
+  // Create risk assessment
+  await prisma.riskAssessment.create({
     data: {
       patientId: patient.id,
-      title: 'Review glucose trends',
-      description: 'Weekly check on CGM data patterns',
-      status: 'OPEN',
-      priority: 'MEDIUM',
-      assignedToUserId: clinician.id,
-      createdByUserId: educator.id,
-      dueAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      score: story.risk.score,
+      tier: story.risk.tier,
+      factors: story.risk.factors,
+      modelVersion: story.risk.modelVersion,
+      sourceWindowStart: story.risk.sourceWindowStart,
+      sourceWindowEnd: story.risk.sourceWindowEnd,
+      computedAt: story.risk.computedAt,
     },
   });
 
-  console.log('Seed complete.');
+  return allObs.length;
+}
+
+async function main() {
+  console.log('Seeding database with synthetic data...');
+  const start = Date.now();
+
+  const { clinician, educator } = await seedUsers();
+  console.log('  Users created.');
+
+  // Generate 30 patients (6 per archetype)
+  console.log('Generating synthetic patient stories...');
+  const stories = generateAllStories(6, 42);
+  console.log(`  Generated ${stories.length} patient stories.`);
+
+  let totalObs = 0;
+  for (let i = 0; i < stories.length; i++) {
+    const story = stories[i]!;
+    const obsCount = await seedStory(story, clinician.id, educator.id);
+    totalObs += obsCount;
+    process.stdout.write(`  Patient ${i + 1}/${stories.length} [${story.archetype.label}] — ${obsCount} observations\n`);
+  }
+
+  const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+  console.log(`\nSeed complete in ${elapsed}s.`);
   console.log(`  Users: ${await prisma.user.count()}`);
   console.log(`  Patients: ${await prisma.patient.count()}`);
   console.log(`  Devices: ${await prisma.device.count()}`);
+  console.log(`  Observations: ${totalObs}`);
+  console.log(`  Alerts: ${await prisma.alert.count()}`);
   console.log(`  Tasks: ${await prisma.task.count()}`);
+  console.log(`  Risk Assessments: ${await prisma.riskAssessment.count()}`);
 }
 
 main()
