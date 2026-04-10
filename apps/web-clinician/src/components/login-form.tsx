@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button, Input, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@t1d/ui';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -14,7 +13,6 @@ const DEMO_ACCOUNTS = [
 
 export function LoginForm() {
   const t = useTranslations('login');
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
