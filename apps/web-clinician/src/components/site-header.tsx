@@ -19,8 +19,8 @@ export function SiteHeader({ userName, userRole, userEmail }: SiteHeaderProps) {
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
-    router.push('/login');
-    router.refresh();
+    // Hard redirect to force middleware to catch the unauthenticated state
+    window.location.href = '/';
   }
 
   return (
