@@ -12,16 +12,17 @@ const globalForPrisma = globalThis as unknown as {
 /**
  * Singleton PrismaClient instance.
  *
- * In development, this is cached on globalThis to survive HMR reloads.
- * In production, a fresh instance is created per process.
+ * Cached on globalThis in ALL environments to prevent connection pool
+ * exhaustion in serverless (Vercel) where each invocation would otherwise
+ * create a new pool.
  */
 export const prisma: PrismaClient =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: process.env['NODE_ENV'] === 'development' ? ['query', 'warn', 'error'] : ['error'],
+    log: process.env.NODE_ENV === 'development' ? ['query', 'warn', 'error'] : ['error'],
   });
 
-if (process.env['NODE_ENV'] !== 'production') {
+if (!globalForPrisma.prisma) {
   globalForPrisma.prisma = prisma;
 }
 

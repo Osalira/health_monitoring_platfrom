@@ -21,7 +21,7 @@ export function validateEnv(): EnvConfig {
 
   const missing: string[] = [];
 
-  if (!process.env['DATABASE_URL']) {
+  if (!process.env.DATABASE_URL) {
     missing.push('DATABASE_URL');
   }
 
@@ -33,7 +33,7 @@ export function validateEnv(): EnvConfig {
   }
 
   // Warn about optional but recommended vars
-  if (!process.env['NEXT_PUBLIC_SUPABASE_URL']) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
     console.warn('[env] NEXT_PUBLIC_SUPABASE_URL not set — auth will be disabled');
   }
 
@@ -43,9 +43,9 @@ export function validateEnv(): EnvConfig {
 
 function getEnv(): EnvConfig {
   return {
-    DATABASE_URL: process.env['DATABASE_URL']!,
-    NEXT_PUBLIC_SUPABASE_URL: process.env['NEXT_PUBLIC_SUPABASE_URL'],
-    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'],
-    NODE_ENV: process.env['NODE_ENV'] ?? 'development',
+    DATABASE_URL: process.env.DATABASE_URL!,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    NODE_ENV: process.env.NODE_ENV ?? 'development',
   };
 }

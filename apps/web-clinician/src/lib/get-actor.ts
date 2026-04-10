@@ -7,14 +7,14 @@ import { prisma } from '@t1d/database';
  * Returns undefined if no session or user not found.
  */
 export async function getActorFromRequest(request: Request): Promise<string | undefined> {
-  if (!process.env['NEXT_PUBLIC_SUPABASE_URL'] || !process.env['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY']) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) {
     return undefined;
   }
 
   try {
     const supabase = createServerClient(
-      process.env['NEXT_PUBLIC_SUPABASE_URL'],
-      process.env['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'],
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
       {
         cookies: {
           getAll() {

@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check if Supabase env vars are configured
-  if (!process.env['NEXT_PUBLIC_SUPABASE_URL'] || !process.env['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY']) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) {
     // No Supabase configured — fall through to i18n only (local dev without Supabase)
     return intlMiddleware(request);
   }
