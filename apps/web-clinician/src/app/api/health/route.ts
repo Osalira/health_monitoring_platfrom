@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@t1d/database';
 
+export const runtime = 'nodejs';
+
 const startTime = Date.now();
 
 export async function GET() {

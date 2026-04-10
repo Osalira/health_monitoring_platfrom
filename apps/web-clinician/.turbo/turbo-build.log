@@ -1,0 +1,86 @@
+
+> @t1d/web-clinician@0.0.0 build C:\Users\osali\OneDrive\Bureau\ConsultantITBusiness\healthplatform\t1d-command-center\apps\web-clinician
+> prisma generate --schema=../../packages/database/prisma/schema.prisma && next build
+
+Prisma schema loaded from ..\..\packages\database\prisma\schema.prisma
+┌─────────────────────────────────────────────────────────┐
+│  Update available 6.19.3 -> 7.7.0                       │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+
+✔ Generated Prisma Client (v6.19.3) to .\..\..\node_modules\.pnpm\@prisma+client@6.19.3_prism_1d040ab5215f59f0e27ddee7f0cf082e\node_modules\@prisma\client in 344ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
+
+   ▲ Next.js 15.5.15
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (215kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ✓ Compiled successfully in 41s
+   Linting and checking validity of types ...
+
+ ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+   Collecting page data ...
+   Generating static pages (0/25) ...
+   Generating static pages (6/25) 
+   Generating static pages (12/25) 
+   Generating static pages (18/25) 
+ ✓ Generating static pages (25/25)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /_not-found                            996 B         104 kB
+├ ● /[locale]                              131 B         160 kB
+├   ├ /en
+├   └ /fr
+├ ● /[locale]/alerts                      1.1 kB         156 kB
+├   ├ /en/alerts
+├   └ /fr/alerts
+├ ● /[locale]/audit                      1.15 kB         151 kB
+├   ├ /en/audit
+├   └ /fr/audit
+├ ● /[locale]/login                      64.4 kB         215 kB
+├   ├ /en/login
+├   └ /fr/login
+├ ● /[locale]/patients                     131 B         160 kB
+├   ├ /en/patients
+├   └ /fr/patients
+├ ƒ /[locale]/patients/[id]               111 kB         266 kB
+├ ● /[locale]/settings                     274 B         115 kB
+├   ├ /en/settings
+├   └ /fr/settings
+├ ● /[locale]/tasks                       1.1 kB         156 kB
+├   ├ /en/tasks
+├   └ /fr/tasks
+├ ƒ /api/alerts/[id]                       152 B         103 kB
+├ ƒ /api/auth/logout                       152 B         103 kB
+├ ƒ /api/compute-metrics                   152 B         103 kB
+├ ƒ /api/health                            152 B         103 kB
+├ ƒ /api/ingest                            152 B         103 kB
+├ ƒ /api/outreach                          152 B         103 kB
+├ ƒ /api/summaries/generate                152 B         103 kB
+├ ƒ /api/tasks                             152 B         103 kB
+├ ƒ /api/tasks/[id]                        152 B         103 kB
+└ ƒ /api/users                             152 B         103 kB
++ First Load JS shared by all             103 kB
+  ├ chunks/695-18621b9370cd1dda.js       46.6 kB
+  ├ chunks/d99d8e6a-523bb029c77bae6f.js  54.2 kB
+  └ other shared chunks (total)          2.05 kB
+
+
+ƒ Middleware                             98.4 kB
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
