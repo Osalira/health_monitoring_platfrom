@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { LogOut, User } from 'lucide-react';
 import { Badge, Button, Separator } from '@t1d/ui';
@@ -15,7 +14,6 @@ interface SiteHeaderProps {
 
 export function SiteHeader({ userName, userRole, userEmail }: SiteHeaderProps) {
   const t = useTranslations();
-  const router = useRouter();
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
