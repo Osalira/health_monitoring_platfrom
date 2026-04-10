@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --port 3000",
-    "build": "next build",
+    "build": "prisma generate --schema=../../packages/database/prisma/schema.prisma && next build",
     "start": "next start",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
@@ -29,6 +29,7 @@
     "recharts": "^2.15.0"
   },
   "devDependencies": {
+    "prisma": "^6.9.0",
     "@types/node": "25.5.2",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
