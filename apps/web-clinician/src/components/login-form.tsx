@@ -35,8 +35,8 @@ export function LoginForm() {
         return;
       }
 
-      router.refresh();
-      router.push('/');
+      // Hard redirect so the server layout re-executes and resolves the user
+      window.location.href = '/';
     } catch (e) {
       console.error('[login] Unexpected error:', e);
       setError(t('unexpectedError'));
