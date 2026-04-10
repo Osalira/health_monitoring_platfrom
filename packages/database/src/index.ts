@@ -1,9 +1,9 @@
 /** Database client and schema exports for T1D Command Center. */
 
-export { PrismaClient } from '@prisma/client';
-export type * from '@prisma/client';
+export { PrismaClient } from '../generated/prisma';
+export type * from '../generated/prisma';
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma';
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;

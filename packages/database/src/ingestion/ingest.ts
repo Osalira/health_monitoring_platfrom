@@ -1,4 +1,4 @@
-import type { PrismaClient, Prisma, ObservationType } from '@prisma/client';
+import type { PrismaClient, Prisma, ObservationType } from '../../generated/prisma';
 import type { IngestPayload } from './schema';
 
 export interface IngestResult {

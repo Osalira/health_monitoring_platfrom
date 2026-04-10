@@ -7,11 +7,10 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   // Include monorepo root so Vercel traces files from packages/ correctly
   outputFileTracingRoot: join(__dirname, '../../'),
-  // Force-include Prisma engine binaries and shared package files in the bundle
+  // Force-include Prisma generated client + engine binaries in the Vercel bundle
   outputFileTracingIncludes: {
     '/*': [
-      '../../node_modules/.prisma/client/**/*',
-      '../../node_modules/@prisma/client/**/*',
+      '../../packages/database/generated/**/*',
       '../../packages/database/**/*',
     ],
   },

@@ -7,7 +7,7 @@
  * Usage: pnpm --filter @t1d/database db:seed
  */
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma';
 import { generateAllStories, type PatientStory } from '@t1d/synthetic-data';
 
 const prisma = new PrismaClient();

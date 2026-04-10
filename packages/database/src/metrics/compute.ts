@@ -5,7 +5,7 @@
  * and upserts DailyMetric / WeeklyFeature / RiskAssessment records.
  */
 
-import type { PrismaClient, Prisma } from '@prisma/client';
+import type { PrismaClient, Prisma } from '../../generated/prisma';
 import {
   computeDailyMetrics,
   computeWeeklyFeatures,

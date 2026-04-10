@@ -2,7 +2,7 @@
  * Audit event creation and querying.
  */
 
-import type { PrismaClient, Prisma } from '@prisma/client';
+import type { PrismaClient, Prisma } from '../../generated/prisma';
 
 export interface CreateAuditInput {
   actorUserId?: string | undefined;

@@ -5,7 +5,7 @@
  * and persists the structured result.
  */
 
-import type { PrismaClient, Prisma } from '@prisma/client';
+import type { PrismaClient, Prisma } from '../../generated/prisma';
 import { composeVisitPrep, type SummaryLocale, type VisitPrepSummary, type SummaryInput } from '@t1d/summary-engine';
 
 // Re-export for backward compat
