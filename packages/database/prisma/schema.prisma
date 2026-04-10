@@ -2,7 +2,8 @@
 // Source of truth: docs/architecture/002-domain-model.md
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
