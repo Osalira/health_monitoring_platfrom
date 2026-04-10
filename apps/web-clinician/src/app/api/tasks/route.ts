@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma, type Prisma } from '@t1d/database';
+import { prisma, type Prisma, createAuditEvent } from '@t1d/database';
+import { getActorFromRequest } from '@/lib/get-actor';
 
 export async function POST(request: Request) {
   try {
@@ -30,6 +31,14 @@ export async function POST(request: Request) {
     if (body.dueAt) data.dueAt = new Date(body.dueAt);
 
     const task = await prisma.task.create({ data });
+
+    await createAuditEvent(prisma, {
+      action: 'CREATE',
+      resourceType: 'task',
+      resourceId: task.id,
+      patientId: body.patientId,
+      actorUserId: await getActorFromRequest(request),
+    });
 
     return NextResponse.json(task, { status: 201 });
   } catch (error) {

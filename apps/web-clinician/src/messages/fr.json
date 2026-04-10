@@ -29,6 +29,9 @@
   "nav": {
     "dashboard": "Tableau de bord",
     "patients": "Patients",
+    "tasks": "Tâches",
+    "alerts": "Alertes",
+    "audit": "Journal d'audit",
     "settings": "Paramètres",
     "help": "Aide"
   },
@@ -40,9 +43,19 @@
     "caregiver": "Aidant"
   },
   "auth": {
-    "switchUser": "Changer d'utilisateur",
-    "currentUser": "Utilisateur actuel",
-    "demoMode": "Mode démo"
+    "syntheticData": "Données synthétiques",
+    "logout": "Déconnexion"
+  },
+  "login": {
+    "title": "Connexion",
+    "subtitle": "Accédez au Centre de contrôle DT1",
+    "emailPlaceholder": "Adresse courriel",
+    "passwordPlaceholder": "Mot de passe",
+    "signIn": "Se connecter",
+    "signingIn": "Connexion en cours…",
+    "invalidCredentials": "Adresse courriel ou mot de passe invalide.",
+    "unexpectedError": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+    "demoAccounts": "Comptes de démonstration (cliquer pour remplir)"
   },
   "dashboard": {
     "title": "Centre de contrôle DT1",
@@ -116,6 +129,7 @@
     "noData": "Aucune donnée disponible.",
     "due": "Échéance {date}",
     "notFound": "Patient introuvable.",
+    "consent": "Consentement",
     "factors": {
       "timeInRange": "Temps dans la cible",
       "timeInRangeDesc": "Pourcentage de glycémies entre 70 et 180 mg/dL",
@@ -210,5 +224,36 @@
     "switchTo": "Changer de langue",
     "en": "English",
     "fr": "Français"
+  },
+  "tasksPage": {
+    "title": "Tâches en attente",
+    "description": "Toutes les tâches ouvertes et en cours pour tous les patients.",
+    "empty": "Aucune tâche en attente. Tout est à jour !",
+    "task": "Tâche",
+    "patient": "Patient",
+    "priority": "Priorité",
+    "status": "Statut",
+    "assignedTo": "Assigné à",
+    "dueDate": "Échéance"
+  },
+  "alertsPage": {
+    "title": "Alertes actives",
+    "description": "Toutes les alertes actives et prises en charge pour tous les patients.",
+    "empty": "Aucune alerte active.",
+    "severity": "Sévérité",
+    "alert": "Alerte",
+    "patient": "Patient",
+    "status": "Statut",
+    "triggered": "Déclenchée"
+  },
+  "audit": {
+    "title": "Journal d'audit",
+    "description": "Consultez les actions sensibles et les accès aux données.",
+    "empty": "Aucun événement d'audit enregistré.",
+    "time": "Heure",
+    "actor": "Acteur",
+    "action": "Action",
+    "resource": "Ressource",
+    "patient": "Patient"
   }
 }

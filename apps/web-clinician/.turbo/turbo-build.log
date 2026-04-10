@@ -3,48 +3,63 @@
 > next build
 
    ▲ Next.js 15.5.15
+   - Environments: .env.local
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 11.0s
+ ✓ Compiled successfully in 10.0s
    Linting and checking validity of types ...
 
  ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
    Collecting page data ...
-   Generating static pages (0/15) ...
-   Generating static pages (3/15) 
-   Generating static pages (7/15) 
-   Generating static pages (11/15) 
- ✓ Generating static pages (15/15)
+   Generating static pages (0/25) ...
+   Generating static pages (6/25) 
+   Generating static pages (12/25) 
+   Generating static pages (18/25) 
+ ✓ Generating static pages (25/25)
    Finalizing page optimization ...
    Collecting build traces ...
 
 Route (app)                                 Size  First Load JS
 ┌ ○ /_not-found                            996 B         104 kB
-├ ● /[locale]                             5.2 kB         160 kB
+├ ● /[locale]                              131 B         160 kB
 ├   ├ /en
 ├   └ /fr
-├ ● /[locale]/patients                   1.15 kB         151 kB
+├ ● /[locale]/alerts                      1.1 kB         156 kB
+├   ├ /en/alerts
+├   └ /fr/alerts
+├ ● /[locale]/audit                      1.15 kB         151 kB
+├   ├ /en/audit
+├   └ /fr/audit
+├ ● /[locale]/login                      64.4 kB         215 kB
+├   ├ /en/login
+├   └ /fr/login
+├ ● /[locale]/patients                     131 B         160 kB
 ├   ├ /en/patients
 ├   └ /fr/patients
 ├ ƒ /[locale]/patients/[id]               111 kB         266 kB
 ├ ● /[locale]/settings                     274 B         115 kB
 ├   ├ /en/settings
 ├   └ /fr/settings
-├ ƒ /api/alerts/[id]                       145 B         103 kB
-├ ƒ /api/compute-metrics                   145 B         103 kB
-├ ƒ /api/ingest                            145 B         103 kB
-├ ƒ /api/outreach                          145 B         103 kB
-├ ƒ /api/summaries/generate                145 B         103 kB
-├ ƒ /api/tasks                             145 B         103 kB
-├ ƒ /api/tasks/[id]                        145 B         103 kB
-└ ƒ /api/users                             145 B         103 kB
+├ ● /[locale]/tasks                       1.1 kB         156 kB
+├   ├ /en/tasks
+├   └ /fr/tasks
+├ ƒ /api/alerts/[id]                       152 B         103 kB
+├ ƒ /api/auth/logout                       152 B         103 kB
+├ ƒ /api/compute-metrics                   152 B         103 kB
+├ ƒ /api/health                            152 B         103 kB
+├ ƒ /api/ingest                            152 B         103 kB
+├ ƒ /api/outreach                          152 B         103 kB
+├ ƒ /api/summaries/generate                152 B         103 kB
+├ ƒ /api/tasks                             152 B         103 kB
+├ ƒ /api/tasks/[id]                        152 B         103 kB
+└ ƒ /api/users                             152 B         103 kB
 + First Load JS shared by all             103 kB
   ├ chunks/695-18621b9370cd1dda.js       46.6 kB
   ├ chunks/d99d8e6a-523bb029c77bae6f.js  54.2 kB
   └ other shared chunks (total)          2.05 kB
 
 
-ƒ Middleware                             45.7 kB
+ƒ Middleware                             98.3 kB
 
 ○  (Static)   prerendered as static content
 ●  (SSG)      prerendered as static HTML (uses generateStaticParams)

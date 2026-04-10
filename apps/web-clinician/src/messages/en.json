@@ -29,6 +29,9 @@
   "nav": {
     "dashboard": "Dashboard",
     "patients": "Patients",
+    "tasks": "Tasks",
+    "alerts": "Alerts",
+    "audit": "Audit Trail",
     "settings": "Settings",
     "help": "Help"
   },
@@ -40,9 +43,19 @@
     "caregiver": "Caregiver"
   },
   "auth": {
-    "switchUser": "Switch user",
-    "currentUser": "Current user",
-    "demoMode": "Demo mode"
+    "syntheticData": "Synthetic Data",
+    "logout": "Log out"
+  },
+  "login": {
+    "title": "Sign In",
+    "subtitle": "Access the T1D Command Center",
+    "emailPlaceholder": "Email address",
+    "passwordPlaceholder": "Password",
+    "signIn": "Sign In",
+    "signingIn": "Signing in…",
+    "invalidCredentials": "Invalid email or password.",
+    "unexpectedError": "An unexpected error occurred. Please try again.",
+    "demoAccounts": "Demo accounts (click to fill)"
   },
   "dashboard": {
     "title": "T1D Command Center",
@@ -116,6 +129,7 @@
     "noData": "No data available.",
     "due": "Due {date}",
     "notFound": "Patient not found.",
+    "consent": "Consent",
     "factors": {
       "timeInRange": "Time in Range",
       "timeInRangeDesc": "Percentage of glucose readings between 70–180 mg/dL",
@@ -210,5 +224,36 @@
     "switchTo": "Switch language",
     "en": "English",
     "fr": "Français"
+  },
+  "tasksPage": {
+    "title": "Pending Tasks",
+    "description": "All open and in-progress tasks across patients.",
+    "empty": "No pending tasks. All caught up!",
+    "task": "Task",
+    "patient": "Patient",
+    "priority": "Priority",
+    "status": "Status",
+    "assignedTo": "Assigned To",
+    "dueDate": "Due Date"
+  },
+  "alertsPage": {
+    "title": "Active Alerts",
+    "description": "All active and acknowledged alerts across patients.",
+    "empty": "No active alerts.",
+    "severity": "Severity",
+    "alert": "Alert",
+    "patient": "Patient",
+    "status": "Status",
+    "triggered": "Triggered"
+  },
+  "audit": {
+    "title": "Audit Trail",
+    "description": "Review sensitive actions and data access events.",
+    "empty": "No audit events recorded yet.",
+    "time": "Time",
+    "actor": "Actor",
+    "action": "Action",
+    "resource": "Resource",
+    "patient": "Patient"
   }
 }

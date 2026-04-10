@@ -16,11 +16,11 @@ async function seedUsers() {
   console.log('Creating demo users...');
 
   const clinician = await prisma.user.upsert({
-    where: { email: 'dr.chen@t1d-clinic.demo' },
+    where: { email: 'clinician@t1d-demo.app' },
     update: {},
     create: {
       id: 'usr_clinician_01',
-      email: 'dr.chen@t1d-clinic.demo',
+      email: 'clinician@t1d-demo.app',
       displayName: 'Dr. Sarah Chen',
       role: 'CLINICIAN',
       localePreference: 'en',
@@ -29,11 +29,11 @@ async function seedUsers() {
   });
 
   const educator = await prisma.user.upsert({
-    where: { email: 'marc.dupont@t1d-clinic.demo' },
+    where: { email: 'educator@t1d-demo.app' },
     update: {},
     create: {
       id: 'usr_educator_01',
-      email: 'marc.dupont@t1d-clinic.demo',
+      email: 'educator@t1d-demo.app',
       displayName: 'Marc Dupont',
       role: 'EDUCATOR',
       localePreference: 'fr',
@@ -42,11 +42,11 @@ async function seedUsers() {
   });
 
   await prisma.user.upsert({
-    where: { email: 'admin@t1d-clinic.demo' },
+    where: { email: 'admin@t1d-demo.app' },
     update: {},
     create: {
       id: 'usr_admin_01',
-      email: 'admin@t1d-clinic.demo',
+      email: 'admin@t1d-demo.app',
       displayName: 'Clinic Admin',
       role: 'ADMIN',
       localePreference: 'en',
@@ -61,6 +61,7 @@ async function seedStory(
   story: PatientStory,
   clinicianId: string,
   educatorId: string,
+  index: number,
 ) {
   // Create patient
   const patient = await prisma.patient.upsert({
@@ -180,6 +181,15 @@ async function seedStory(
     });
   }
 
+  // Create consent records (vary by patient index for demo variety)
+  await prisma.consentRecord.createMany({
+    data: [
+      { patientId: patient.id, consentType: 'DATA_SHARING', status: 'GRANTED', grantedAt: new Date() },
+      { patientId: patient.id, consentType: 'RESEARCH', status: index % 3 === 0 ? 'GRANTED' : 'PENDING' },
+      { patientId: patient.id, consentType: 'DEVICE_ACCESS', status: 'GRANTED', grantedAt: new Date() },
+    ],
+  });
+
   // Create risk assessment
   await prisma.riskAssessment.create({
     data: {
@@ -212,7 +222,7 @@ async function main() {
   let totalObs = 0;
   for (let i = 0; i < stories.length; i++) {
     const story = stories[i]!;
-    const obsCount = await seedStory(story, clinician.id, educator.id);
+    const obsCount = await seedStory(story, clinician.id, educator.id, i);
     totalObs += obsCount;
     process.stdout.write(`  Patient ${i + 1}/${stories.length} [${story.archetype.label}] — ${obsCount} observations\n`);
   }
@@ -226,6 +236,7 @@ async function main() {
   console.log(`  Alerts: ${await prisma.alert.count()}`);
   console.log(`  Tasks: ${await prisma.task.count()}`);
   console.log(`  Risk Assessments: ${await prisma.riskAssessment.count()}`);
+  console.log(`  Consent Records: ${await prisma.consentRecord.count()}`);
 }
 
 main()

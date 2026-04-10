@@ -62,6 +62,11 @@ export interface PatientDetail {
     content: Record<string, unknown>;
     generatedAt: Date;
   } | null;
+
+  consents: {
+    consentType: string;
+    status: string;
+  }[];
 }
 
 export async function getPatientDetail(
@@ -113,6 +118,9 @@ export async function getPatientDetail(
           explanation: true,
           triggeredAt: true,
         },
+      },
+      consents: {
+        select: { consentType: true, status: true },
       },
     },
   });
@@ -188,5 +196,6 @@ export async function getPatientDetail(
           generatedAt: latestSummaryRecord.generatedAt,
         }
       : null,
+    consents: patient.consents,
   };
 }

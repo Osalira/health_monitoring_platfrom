@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma, ingestPayloadSchema, ingestPayload } from '@t1d/database';
+import { prisma, ingestPayloadSchema, ingestPayload, createAuditEvent } from '@t1d/database';
+import { getActorFromRequest } from '@/lib/get-actor';
 
 export async function POST(request: Request) {
   try {
@@ -16,6 +17,16 @@ export async function POST(request: Request) {
 
     // Ingest
     const result = await ingestPayload(prisma, parsed.data);
+
+    if (result.status === 'created') {
+      await createAuditEvent(prisma, {
+        action: 'CREATE',
+        resourceType: 'ingestion',
+        resourceId: result.rawPayloadId,
+        actorUserId: await getActorFromRequest(request),
+        metadata: { observationsCreated: result.observationsCreated },
+      });
+    }
 
     return NextResponse.json(result, {
       status: result.status === 'created' ? 201 : 200,

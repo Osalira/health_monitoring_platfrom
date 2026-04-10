@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { prisma, generateVisitPrepSummary } from '@t1d/database';
+import { prisma, generateVisitPrepSummary, createAuditEvent } from '@t1d/database';
 import type { SummaryLocale } from '@t1d/summary-engine';
+import { getActorFromRequest } from '@/lib/get-actor';
 
 export async function POST(request: Request) {
   try {
@@ -22,6 +23,14 @@ export async function POST(request: Request) {
       body.generatedByUserId,
       locale,
     );
+
+    await createAuditEvent(prisma, {
+      action: 'GENERATE',
+      resourceType: 'summary',
+      resourceId: result.id,
+      patientId: body.patientId,
+      actorUserId: body.generatedByUserId ?? await getActorFromRequest(request),
+    });
 
     return NextResponse.json(result, { status: 201 });
   } catch (error) {

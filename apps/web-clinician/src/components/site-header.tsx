@@ -1,19 +1,27 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Badge, Separator } from '@t1d/ui';
-import type { MockUser } from '@t1d/auth';
+import { LogOut, User } from 'lucide-react';
+import { Badge, Button, Separator } from '@t1d/ui';
 import { ThemeToggle } from './theme-toggle';
 import { LocaleSwitcher } from './locale-switcher';
-import { UserMenu } from './user-menu';
 
 interface SiteHeaderProps {
-  currentUser: MockUser;
-  onSwitchUser: (userId: string) => void;
+  userName?: string | undefined;
+  userRole?: string | undefined;
+  userEmail?: string | undefined;
 }
 
-export function SiteHeader({ currentUser, onSwitchUser }: SiteHeaderProps) {
+export function SiteHeader({ userName, userRole, userEmail }: SiteHeaderProps) {
   const t = useTranslations();
+  const router = useRouter();
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/login');
+    router.refresh();
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -23,15 +31,33 @@ export function SiteHeader({ currentUser, onSwitchUser }: SiteHeaderProps) {
             {t('dashboard.title')}
           </span>
           <Badge variant="outline" className="text-xs">
-            {t('auth.demoMode')}
+            {t('auth.syntheticData')}
           </Badge>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <UserMenu currentUser={currentUser} onSwitchUser={onSwitchUser} />
+          {userName && (
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4 text-muted-foreground" />
+              <span className="hidden text-sm sm:inline">{userName}</span>
+              {userRole && (
+                <Badge variant="secondary" className="hidden text-xs sm:inline-flex">
+                  {t(`roles.${userRole.toLowerCase()}`)}
+                </Badge>
+              )}
+            </div>
+          )}
           <Separator orientation="vertical" className="mx-1 h-6" />
           <LocaleSwitcher />
           <Separator orientation="vertical" className="mx-1 h-6" />
           <ThemeToggle />
+          {userEmail && (
+            <>
+              <Separator orientation="vertical" className="mx-1 h-6" />
+              <Button variant="ghost" size="icon" onClick={handleLogout} aria-label={t('auth.logout')}>
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>

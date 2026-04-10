@@ -712,3 +712,215 @@
 - What to check: 10 compose tests pass
 - How to check: `pnpm --filter @t1d/summary-engine test`
 - Expected result: 10 tests (EN/FR generation, citations, trends, empty data, etc.)
+
+## Stage 12 - Audit, privacy, and observability
+
+### Check 1 - Audit trail page exists
+
+- What to check: /audit page shows audit events table
+- How to check: Navigate to Audit Trail in sidebar, verify table with columns
+- Expected result: Table with Time, Actor, Action, Resource, Patient columns
+
+### Check 2 - Audit events are logged (requires DB + action)
+
+- What to check: Creating a task produces an audit event
+- How to check: Create a task from patient detail, then visit /audit
+- Expected result: New CREATE/task event appears at the top
+
+### Check 3 - Health check endpoint
+
+- What to check: GET /api/health returns status
+- How to check: `curl http://localhost:3000/api/health`
+- Expected result: `{"status":"ok","timestamp":"...","dbConnected":true}`
+
+### Check 4 - Consent badges on patient header
+
+- What to check: ConsentRecord badges display on patient detail
+- How to check: If patient has consent records, badges show on header
+- Expected result: DATA_SHARING/RESEARCH/DEVICE_ACCESS with GRANTED/REVOKED/PENDING status
+
+### Check 5 - Audit page localizes to French
+
+- What to check: French labels on audit page
+- How to check: Switch to FR, visit /audit
+- Expected result: "Journal d'audit", "Heure", "Acteur", "Action", "Ressource"
+
+### Check 6 - Quality gates pass (109 tests, 14/14)
+- Expected result: Zero errors
+
+## Stage 13 - Deployment and hosted verification
+
+### Check 1 - App accessible at public URL
+
+- What to check: Hosted app loads without errors
+- How to check: Visit the production URL in a browser
+- Expected result: Dashboard loads with seeded patient data, no 500 errors
+
+### Check 2 - Health check on hosted environment
+
+- What to check: /api/health returns ok
+- How to check: `curl https://<hosted-url>/api/health`
+- Expected result: `{"status":"ok","timestamp":"...","dbConnected":true}`
+
+### Check 3 - Database seeded on hosted environment
+
+- What to check: 30 patients with full clinical data visible
+- How to check: Dashboard shows KPI cards with non-zero values, roster has patients
+- Expected result: Total Patients: 30, High Risk: 12, patients have risk scores and glucose data
+
+### Check 4 - EN/FR works on hosted environment
+
+- What to check: Locale switching works in production
+- How to check: Switch to French via dropdown, verify all text localizes
+- Expected result: Full French UI with no English bleed-through
+
+### Check 5 - Light/dark works on hosted environment
+
+- What to check: Theme switching works in production
+- How to check: Toggle theme, verify chart and cards render correctly
+- Expected result: Both themes work, chart remains readable
+
+### Check 6 - Patient detail loads on hosted environment
+
+- What to check: Clicking a patient shows full detail page
+- How to check: Click any patient from roster, verify chart + panels
+- Expected result: Glucose chart renders, tasks/alerts/summary sections load
+
+### Check 7 - No secrets exposed
+
+- What to check: No database URLs or API keys visible in client bundle
+- How to check: View page source, check network tab for leaked env vars
+- Expected result: No secrets in HTML or JavaScript bundles
+
+### Check 8 - Synthetic data disclaimer visible
+
+- What to check: "Synthetic Data" badge visible in header
+- How to check: Check header bar
+- Expected result: Badge shows "Synthetic Data" / "Données synthétiques" depending on locale
+
+## Stage 15 - Supabase Auth
+
+### Check 1 - Login page renders
+
+- What to check: Unauthenticated users see login page
+- How to check: Open app in incognito, visit /en
+- Expected result: Redirected to /en/login, form shows email/password fields + demo account hints
+
+### Check 2 - Login with demo credentials
+
+- What to check: Signing in with demo credentials works
+- How to check: Click "Clinician" demo account hint, click Sign In
+- Expected result: Redirected to dashboard, header shows "Dr. Sarah Chen" + role badge
+
+### Check 3 - Logout works
+
+- What to check: Logout button clears session
+- How to check: Click logout icon in header
+- Expected result: Redirected to login page
+
+### Check 4 - Login page is localized
+
+- What to check: Login page works in French
+- How to check: Visit /fr/login
+- Expected result: "Connexion", "Adresse courriel", "Se connecter", "Comptes de démonstration"
+
+### Check 5 - Login page works in dark mode
+
+- What to check: Login form renders correctly in dark mode
+- How to check: Toggle system dark mode before logging in
+- Expected result: Card, inputs, and buttons use semantic tokens
+
+### Check 6 - Protected routes redirect when not authenticated
+
+- What to check: Accessing /en/patients without auth redirects to login
+- How to check: Clear cookies, visit /en/patients directly
+- Expected result: Redirected to /en/login
+
+### Check 7 - Quality gates pass (109 tests, 14/14)
+- Expected result: Zero errors
+
+## Operational readiness
+
+### Check 1 - Health check returns full info
+
+- What to check: `/api/health` returns version, uptime, DB latency, auth config
+- How to check: `curl http://localhost:3000/api/health | jq`
+- Expected result: `{ status: 'ok', version: '0.1.0', database: { connected: true, latencyMs: N } }`
+
+### Check 2 - Environment validation fails on missing vars
+
+- What to check: App errors clearly when DATABASE_URL is missing
+- How to check: Remove DATABASE_URL from .env, restart dev
+- Expected result: Startup error message naming the missing variable
+
+### Check 3 - Tasks page shows all open tasks
+
+- What to check: `/tasks` shows cross-patient task list
+- How to check: Click "Pending Tasks" KPI or Tasks in sidebar
+- Expected result: Table with task, patient (linked), priority, status, assignee, due date
+
+### Check 4 - Alerts page shows all active alerts
+
+- What to check: `/alerts` shows cross-patient alert list
+- How to check: Click "Active Alerts" KPI or Alerts in sidebar
+- Expected result: Table with severity, alert type + explanation, patient (linked), status, triggered time
+
+### Check 5 - All KPI cards navigate to correct pages
+
+- What to check: Each dashboard KPI card links somewhere useful
+- How to check: Click each of the 4 KPI cards
+- Expected result: Total Patients → /patients, High Risk → /patients?risk=HIGH, Tasks → /tasks, Alerts → /alerts
+
+### Check 6 - Sidebar has 6 nav items
+
+- What to check: Dashboard, Patients, Tasks, Alerts, Audit Trail, Settings
+- How to check: Inspect sidebar
+- Expected result: All 6 items visible with correct icons
+
+## Hosted deployment verification (release checklist)
+
+### 1 - Build succeeds
+- `pnpm build` passes 14/14 locally before deploy
+
+### 2 - Health check
+- `curl https://[app-url]/api/health`
+- Expected: `{ "status": "ok", "database": { "connected": true, "latencyMs": <number> } }`
+
+### 3 - Login flow
+- Visit app URL → redirected to login page
+- Sign in with `clinician@t1d-demo.app` / `demo-clinician-2026`
+- Expected: dashboard loads with sidebar, KPI cards, patient roster
+
+### 4 - Dashboard KPIs
+- Total Patients: 30
+- High Risk: 12
+- Pending Tasks: ~96
+- Active Alerts: ~30+
+- Each card links to the correct page
+
+### 5 - Patient detail
+- Click any patient → header, glucose chart, events, risk explanation, tasks, alerts
+- Generate visit prep summary → facts/trends/discussion sections appear
+
+### 6 - Tasks page
+- Click "Pending Tasks" KPI → navigates to /tasks
+- Table shows tasks with patient links, priority badges, due dates
+
+### 7 - Alerts page
+- Click "Active Alerts" KPI → navigates to /alerts
+- Table shows alerts with severity badges, explanations, patient links
+
+### 8 - Audit trail
+- Navigate to Audit → shows logged events with actors and timestamps
+
+### 9 - French locale
+- Switch to FR → all text localizes (dashboard, patient detail, login page, tasks, alerts)
+
+### 10 - Dark mode
+- Toggle theme → all pages render correctly in dark mode
+
+### 11 - Synthetic data badge
+- Header shows "Synthetic Data" / "Données synthétiques" badge
+
+### 12 - Logout
+- Click logout icon → redirected to login page, session cleared

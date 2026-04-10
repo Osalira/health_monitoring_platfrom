@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma, type Prisma } from '@t1d/database';
+import { prisma, type Prisma, createAuditEvent } from '@t1d/database';
+import { getActorFromRequest } from '@/lib/get-actor';
 
 export async function POST(request: Request) {
   try {
@@ -25,6 +26,15 @@ export async function POST(request: Request) {
     if (body.authorId) data.authorId = body.authorId;
 
     const entry = await prisma.outreachLog.create({ data });
+
+    await createAuditEvent(prisma, {
+      action: 'CREATE',
+      resourceType: 'outreach',
+      resourceId: entry.id,
+      patientId: body.patientId,
+      actorUserId: body.authorId ?? await getActorFromRequest(request),
+    });
+
     return NextResponse.json(entry, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Internal error';

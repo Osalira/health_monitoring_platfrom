@@ -2,113 +2,104 @@
 
 A production-minded, clinician-first platform for proactive type 1 diabetes care.
 
-## Product direction
+> **All data is synthetic.** No real patient information exists in this system.
 
-This project demonstrates a modern healthcare platform that:
+## Live Demo
 
-- ingests heterogeneous diabetes-related data
-- supports clinician workflows
-- prioritizes patients by risk
-- generates explainable summaries
-- maintains auditability and operational maturity
-- supports English/French and light/dark mode from day one
+<!-- Update with actual URL after deployment -->
+**URL:** `https://t1d-command-center.vercel.app`
 
-## Monorepo goals
+**Demo accounts:**
 
-- pnpm workspace
-- Next.js web application
-- modular-monolith backend boundaries
-- shared packages
-- strong engineering conventions
-- high test quality
-- demo-ready seeded synthetic data
+| Role | Email | Password |
+|------|-------|----------|
+| Clinician | `clinician@t1d-demo.app` | `demo-clinician-2026` |
+| Educator | `educator@t1d-demo.app` | `demo-educator-2026` |
+| Admin | `admin@t1d-demo.app` | `demo-admin-2026` |
 
-## Core user journeys
+## What it does
 
-- Clinician Monday Morning Review
-- Open Patient Chart
-- Review patient trends and risk factors
-- Generate visit prep summary
-- Review audit trail
-- Manage tasks and outreach
+- **Population dashboard** — KPI cards, patient roster with risk tiers, search/filter
+- **Patient detail** — Glucose chart (7/14/30d), insulin/meals/activity/labs, risk explanation
+- **Risk scoring** — Explainable 6-factor heuristic with localized labels and descriptions
+- **Visit prep summaries** — Structured facts/trends/discussion with provenance citations
+- **Care coordination** — Task creation/assignment, alert management, outreach logging
+- **Audit trail** — Every action logged with actor, timestamp, resource
+- **Bilingual** — Full English and French support
+- **Dark mode** — Complete light/dark theme support
 
-## Repository structure
+## Tech stack
 
-```
-apps/
-  web-clinician/    # clinician-facing Next.js app
-  web-patient/      # patient-facing shell (future)
-  api/              # API and domain orchestration
-  worker/           # background processing
+- **Frontend:** Next.js 15, React 19, TypeScript, Tailwind CSS, Recharts
+- **Database:** PostgreSQL (Supabase), Prisma ORM
+- **Auth:** Supabase Auth (email/password)
+- **Monorepo:** pnpm workspaces, Turborepo
+- **Testing:** Vitest (109 tests across 7 packages)
 
-packages/
-  ui/               # shared UI primitives
-  config/           # shared configuration
-  types/            # shared TypeScript types
-  i18n/             # localization dictionaries and utilities
-  database/         # Prisma schema, client, and migrations
-  auth/             # mock auth and role helpers
-  observability/    # structured logging and health checks
-  synthetic-data/   # synthetic patient and event generators
-  risk-engine/      # risk scoring and explainability
-  summary-engine/   # visit prep summary generation
-  fhir-model/       # FHIR-aligned type helpers
+## Local development
 
-docs/               # source-of-truth documentation
-scripts/            # seed, demo data, and utility scripts
-infra/              # Docker, CI, and deployment config
-```
+### Prerequisites
 
-## Commands
+- Node.js 20+
+- pnpm 10+
+- Docker (for local Postgres) or a Supabase project
 
-### Install
+### Setup
 
 ```bash
+# Install dependencies
 pnpm install
-```
 
-### Development
+# Option A: Local Postgres via Docker
+docker compose up -d
+cp .env.example .env
+# Edit .env with local DATABASE_URL
 
-```bash
+# Option B: Supabase Postgres
+# Copy your Supabase DATABASE_URL and auth keys to .env
+
+# Push schema and seed data
+pnpm --filter @t1d/database db:generate
+pnpm --filter @t1d/database db:push
+pnpm --filter @t1d/database db:seed
+
+# Start dev server
 pnpm dev
+# Visit http://localhost:3000
 ```
 
-### Lint
+### Quality gates
 
 ```bash
-pnpm lint
+pnpm lint        # ESLint across all packages
+pnpm typecheck   # TypeScript strict mode
+pnpm test        # Vitest (109 tests)
+pnpm build       # Production build
 ```
 
-### Type check
+## Deployment (Vercel + Supabase)
 
-```bash
-pnpm typecheck
+1. **Supabase:** Create project, get DATABASE_URL + API keys
+2. **Supabase Auth:** Create demo users (see table above), disable email confirmation
+3. **Vercel:** Import repo, set env vars (DATABASE_URL, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)
+4. **Post-deploy:** Push schema + seed via CLI or Vercel script
+5. **Verify:** Check `/api/health` returns `{ status: 'ok' }`
+
+## Architecture
+
+```
+apps/web-clinician (Next.js)  →  Supabase Postgres
+                              →  Supabase Auth
 ```
 
-### Test
-
-```bash
-pnpm test
-```
-
-### Build
-
-```bash
-pnpm build
-```
-
-### Format
-
-```bash
-pnpm format
-```
+Single deployable. API routes handle ingestion, metrics, tasks, alerts, summaries, audit.
 
 ## Documentation
 
-All source-of-truth documentation lives under `docs/`:
+All source-of-truth docs live under `docs/`:
 
-- `docs/product/` — PRD, backlog, roadmap, demo script
-- `docs/architecture/` — system design, domain model, frontend/backend architecture
-- `docs/engineering/` — tech stack, conventions, definition of done, decision log
-- `docs/ux/` — design principles, copy guidelines, manual checks
+- `docs/product/` — PRD, backlog, roadmap
+- `docs/architecture/` — system design, domain model, deployment
+- `docs/engineering/` — tech stack, conventions, decision log
+- `docs/ux/` — manual checks, design principles
 - `docs/qa/` — test matrix, release checklist

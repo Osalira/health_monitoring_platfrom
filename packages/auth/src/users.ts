@@ -7,7 +7,7 @@ import type { MockUser } from './types';
 export const DEMO_USERS: readonly MockUser[] = [
   {
     id: 'usr_clinician_01',
-    email: 'dr.chen@t1d-clinic.demo',
+    email: 'clinician@t1d-demo.app',
     displayName: 'Dr. Sarah Chen',
     role: 'clinician',
     localePreference: 'en',
@@ -15,7 +15,7 @@ export const DEMO_USERS: readonly MockUser[] = [
   },
   {
     id: 'usr_educator_01',
-    email: 'marc.dupont@t1d-clinic.demo',
+    email: 'educator@t1d-demo.app',
     displayName: 'Marc Dupont',
     role: 'educator',
     localePreference: 'fr',
@@ -23,7 +23,7 @@ export const DEMO_USERS: readonly MockUser[] = [
   },
   {
     id: 'usr_admin_01',
-    email: 'admin@t1d-clinic.demo',
+    email: 'admin@t1d-demo.app',
     displayName: 'Clinic Admin',
     role: 'admin',
     localePreference: 'en',

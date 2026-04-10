@@ -34,6 +34,7 @@ Build a clinician-first digital platform for proactive type 1 diabetes care that
 - Audit trail
 - English/French localization
 - Light/dark theme support
+- Hosted deployment accessible via public URL
 
 ## Non-goals for MVP
 
@@ -43,16 +44,19 @@ Build a clinician-first digital platform for proactive type 1 diabetes care that
 - Real device vendor integrations
 - Automated diagnosis
 - Medication recommendation automation
+- Multi-tenant isolation
+- HIPAA-compliant data handling (synthetic data only)
 
 ## Core product requirements
 
 - All user-facing UI must work in English and French.
 - All major UI surfaces must work in light and dark mode.
 - All generated insights must be traceable to underlying data.
-- The platform must support seeded synthetic patients and meaningful demo flows.
+- The platform must support seeded synthetic patients and meaningful user flows.
 - The clinician dashboard must prioritize action and visibility into why a patient is flagged.
 - The patient chart must show longitudinal trends and relevant context.
 - The system must preserve auditability and role-aware protections.
+- The hosted environment must be stable, seeded, and accessible without local setup.
 
 ## Core user journeys
 
@@ -95,12 +99,14 @@ Outcome: sensitive reads/writes are visible and traceable.
 
 ## Success criteria
 
-- Demo environment is stable and repeatable
+- Hosted environment is stable and accessible via public URL
 - Synthetic seed data creates meaningful patient stories
 - Dashboard and patient chart flows are credible and polished
 - EN/FR switching works consistently
 - Light/dark switching works consistently
 - Main workflow passes automated and manual checks
+- Health check endpoint returns healthy
+- No secrets or real patient data exposed
 
 ## Constraints
 
@@ -108,3 +114,4 @@ Outcome: sensitive reads/writes are visible and traceable.
 - Use Next.js + TypeScript
 - Favor modular-monolith boundaries over premature microservices
 - Favor simple, maintainable implementations first
+- All data is synthetic — no real patient data

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma, type Prisma } from '@t1d/database';
+import { prisma, type Prisma, createAuditEvent } from '@t1d/database';
+import { getActorFromRequest } from '@/lib/get-actor';
 
 export async function PATCH(
   request: Request,
@@ -24,6 +25,15 @@ export async function PATCH(
     if (body.status === 'COMPLETED') data.completedAt = new Date();
 
     const task = await prisma.task.update({ where: { id }, data });
+
+    await createAuditEvent(prisma, {
+      action: 'UPDATE',
+      resourceType: 'task',
+      resourceId: id,
+      patientId: task.patientId,
+      actorUserId: await getActorFromRequest(request),
+      metadata: { newStatus: body.status },
+    });
 
     return NextResponse.json(task);
   } catch (error) {

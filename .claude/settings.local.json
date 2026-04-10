@@ -12,7 +12,11 @@
       "Bash(docker compose:*)",
       "Bash(PGPASSWORD=postgres psql:*)",
       "Bash(PGPASSWORD=postgres dropdb -h localhost -p 5452 -U postgres --if-exists t1d_command_center)",
-      "Bash(PGPASSWORD=postgres createdb -h localhost -p 5452 -U postgres t1d_command_center)"
+      "Bash(PGPASSWORD=postgres createdb -h localhost -p 5452 -U postgres t1d_command_center)",
+      "Bash(printf '# Prisma reads DATABASE_URL from this file\\\\nDATABASE_URL=postgresql://postgres:t,*UkcwV3mxc-re@db.dzluoymaqvmgctybfreq.supabase.co:5432/postgres\\\\n')",
+      "Bash(printf 'NEXT_PUBLIC_SUPABASE_URL=https://dzluoymaqvmgctybfreq.supabase.co\\\\nNEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_fGBZ4tpfO8HLHTsWu_Cnfw_Dvyj0L0-\\\\n')",
+      "Bash(xargs grep:*)",
+      "Bash(printf '\\\\n# Database\\\\nDATABASE_URL=postgresql://postgres:t,*UkcwV3mxc-re@db.dzluoymaqvmgctybfreq.supabase.co:5432/postgres\\\\n')"
     ]
   }
 }

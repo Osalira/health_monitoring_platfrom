@@ -13,7 +13,8 @@ import { AlertPanel } from '@/components/patient/alert-panel';
 import { SummarySection } from '@/components/patient/summary-section';
 import { OutreachPanel } from '@/components/patient/outreach-panel';
 import type { PatientDetail } from '@/lib/queries/patient-detail';
-import type { SummaryContent } from '@t1d/database';
+import { prisma, createAuditEvent, type SummaryContent } from '@t1d/database';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 export default async function PatientDetailPage({
   params,
@@ -31,6 +32,27 @@ export default async function PatientDetailPage({
 
   const patient = await getPatientDetail(id, safeDays);
   if (!patient) notFound();
+
+  // Audit: log patient chart access
+  let actorUserId: string | undefined;
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+    if (supabaseUser?.email) {
+      const dbUser = await prisma.user.findUnique({
+        where: { email: supabaseUser.email },
+        select: { id: true },
+      });
+      actorUserId = dbUser?.id;
+    }
+  } catch { /* no supabase configured */ }
+  await createAuditEvent(prisma, {
+    action: 'ACCESS',
+    resourceType: 'patient',
+    resourceId: id,
+    patientId: id,
+    actorUserId,
+  });
 
   return <PatientDetailContent patient={patient} days={safeDays} />;
 }

@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { Button, Separator } from '@t1d/ui';
+import { Button, Separator, Badge } from '@t1d/ui';
 import { Link } from '@/i18n/navigation';
 import { ArrowLeft } from 'lucide-react';
 import type { PatientDetail } from '@/lib/queries/patient-detail';
@@ -79,6 +79,21 @@ export function PatientHeader({ patient }: PatientHeaderProps) {
           </p>
         </div>
       </div>
+
+      {patient.consents.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-medium text-muted-foreground">{t('consent')}:</span>
+          {patient.consents.map((c) => (
+            <Badge
+              key={c.consentType}
+              variant={c.status === 'GRANTED' ? 'secondary' : c.status === 'REVOKED' ? 'destructive' : 'outline'}
+              className="text-xs"
+            >
+              {c.consentType.replace('_', ' ')} — {c.status}
+            </Badge>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

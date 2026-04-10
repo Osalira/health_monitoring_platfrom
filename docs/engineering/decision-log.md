@@ -419,3 +419,87 @@ Clinicians need to trust generated content. By citing the source record for each
 - old v1 summaries display a "regenerate" hint in the UI
 - the summary-engine has 10 unit tests validating EN/FR output, citations, and edge cases
 - summary text is template-based, not LLM — documented limitation
+
+## 2026-04-09 - Inline audit logging in API routes
+
+Status: Accepted
+
+### Decision
+
+Add `createAuditEvent()` calls directly in each API route handler after the successful action. This is simpler than middleware-based audit interception. The audit service is a thin wrapper around `prisma.auditEvent.create()` in `packages/database/src/audit/`.
+
+### Why
+
+Middleware-based audit would require parsing response bodies to extract resource IDs, which adds complexity. Inline calls are explicit, co-located with the action they audit, and easy to understand. For a demo-oriented system, this is the right tradeoff.
+
+### Consequences
+
+- audit events are recorded for all 6 write API routes (tasks, alerts, summaries, ingest, outreach)
+- each event includes action type, resource type/ID, and optionally patient ID and actor
+- the audit viewer page at /audit displays events in reverse chronological order
+- no middleware overhead or response body parsing needed
+- if an audit insert fails, the original action still succeeds (non-blocking)
+
+## 2026-04-10 - Upgrade from interview demo to hosted MVP
+
+Status: Accepted
+
+### Decision
+
+Transition the project framing from "interview demo" to "hosted production-shaped MVP." The app will be deployed to a public URL with a managed PostgreSQL database. Mock auth remains acceptable since all data is synthetic. The deployment model is a single Next.js app on Vercel (or equivalent) connected to a managed Postgres instance.
+
+### Why
+
+A hosted MVP demonstrates full-stack capability more credibly than a local-only demo. It proves deployment, environment management, database operations, and operational readiness — all critical for the platform engineering skillset this project demonstrates.
+
+### Consequences
+
+- deployment architecture is documented concretely (Vercel + managed Postgres)
+- environment strategy defined (local, preview, production)
+- definition of done now includes deployment readiness checks
+- release checklist includes post-deploy verification
+- new epics added: Epic 13 (deployment), Epic 14 (polish), Epic 15 (future auth)
+- mock auth is explicitly acceptable for MVP (synthetic data only)
+- no HIPAA compliance needed (no real patient data)
+- seed strategy must be idempotent for hosted environments
+
+## 2026-04-10 - Supabase Auth for hosted MVP
+
+Status: Accepted
+
+### Decision
+
+Use Supabase Auth with email/password for the hosted MVP. Pre-seed 3 demo accounts (clinician, educator, admin) in Supabase Auth dashboard. The middleware redirects unauthenticated users to a login page. The Supabase user email is mapped to the app's User record to resolve role and preferences.
+
+### Why
+
+Supabase is already the database provider — single vendor for auth + database. Built-in email/password is simpler than NextAuth or Clerk. The `@supabase/ssr` package handles SSR cookie management. The login page shows demo credential hints so reviewers can access immediately.
+
+### Consequences
+
+- real authentication flow (email/password) protects the app
+- middleware redirects unauthenticated users to /login
+- actor resolution in audit events uses Supabase session → DB user ID
+- user switching is replaced by real login/logout
+- demo accounts must be seeded in Supabase Auth separately (not in DB seed)
+- the app gracefully falls back if Supabase env vars are not configured (local dev)
+- seed script emails updated to match Supabase auth accounts
+
+## 2026-04-10 - Environment validation and structured logging for operational readiness
+
+Status: Accepted
+
+### Decision
+
+Add `validateEnv()` called from the locale layout that throws on missing `DATABASE_URL`. Add a `logger` utility that outputs JSON-formatted log lines for Vercel parsing. Enhance the health check with version, uptime, DB latency, and auth config status.
+
+### Why
+
+Silent config failures are the #1 cause of "works locally, broken in prod." Failing loudly on startup with a descriptive error saves debugging time. JSON-structured logs are parseable by Vercel and other hosting platforms.
+
+### Consequences
+
+- missing DATABASE_URL throws immediately with a clear message
+- missing Supabase vars trigger a console.warn but don't crash (auth optional for local dev)
+- health check now returns version, uptime, DB latency — useful for monitoring dashboards
+- logger utility available for future API routes (currently API routes still use inline console.error)

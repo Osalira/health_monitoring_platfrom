@@ -1,19 +1,22 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { LayoutDashboard, Users, Settings } from 'lucide-react';
+import { LayoutDashboard, Users, ListTodo, Bell, Shield, Settings } from 'lucide-react';
 import { cn, Button } from '@t1d/ui';
 import { Link, usePathname } from '@/i18n/navigation';
 
 interface NavItem {
   href: string;
-  labelKey: 'dashboard' | 'patients' | 'settings';
+  labelKey: 'dashboard' | 'patients' | 'tasks' | 'alerts' | 'audit' | 'settings';
   icon: React.ComponentType<{ className?: string }>;
 }
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/', labelKey: 'dashboard', icon: LayoutDashboard },
   { href: '/patients', labelKey: 'patients', icon: Users },
+  { href: '/tasks', labelKey: 'tasks', icon: ListTodo },
+  { href: '/alerts', labelKey: 'alerts', icon: Bell },
+  { href: '/audit', labelKey: 'audit', icon: Shield },
   { href: '/settings', labelKey: 'settings', icon: Settings },
 ];
 

@@ -40,3 +40,6 @@ export { computePatientMetrics, type ComputeMetricsResult } from './metrics/inde
 
 // Summaries
 export { generateVisitPrepSummary, type SummaryContent, type GenerateSummaryResult } from './summaries/index';
+
+// Audit
+export { createAuditEvent, getAuditEvents, type CreateAuditInput, type AuditEventRow, type GetAuditFilters } from './audit/index';
