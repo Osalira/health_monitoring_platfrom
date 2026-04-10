@@ -1,11 +1,37 @@
+# Dependencies
 node_modules
 .pnpm-store
+
+# Build output
 .next
 dist
 coverage
+*.tsbuildinfo
+
+# Environment (secrets)
 .env
 .env.local
 .env.*.local
-turbo
+
+# Turbo
+.turbo
+
+# Vercel
 .vercel
+
+# OS
 .DS_Store
+Thumbs.db
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Prisma
+packages/database/prisma/migrations/**/migration_lock.toml
+
+# Debug
+npm-debug.log*
+pnpm-debug.log*

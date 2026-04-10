@@ -16,7 +16,13 @@
       "Bash(printf '# Prisma reads DATABASE_URL from this file\\\\nDATABASE_URL=postgresql://postgres:t,*UkcwV3mxc-re@db.dzluoymaqvmgctybfreq.supabase.co:5432/postgres\\\\n')",
       "Bash(printf 'NEXT_PUBLIC_SUPABASE_URL=https://dzluoymaqvmgctybfreq.supabase.co\\\\nNEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_fGBZ4tpfO8HLHTsWu_Cnfw_Dvyj0L0-\\\\n')",
       "Bash(xargs grep:*)",
-      "Bash(printf '\\\\n# Database\\\\nDATABASE_URL=postgresql://postgres:t,*UkcwV3mxc-re@db.dzluoymaqvmgctybfreq.supabase.co:5432/postgres\\\\n')"
+      "Bash(printf '\\\\n# Database\\\\nDATABASE_URL=postgresql://postgres:t,*UkcwV3mxc-re@db.dzluoymaqvmgctybfreq.supabase.co:5432/postgres\\\\n')",
+      "Bash(git -C \"/c/Users/osali/OneDrive/Bureau/ConsultantITBusiness/healthplatform/t1d-command-center\" ls-files --cached)",
+      "Bash(git -C \"/c/Users/osali/OneDrive/Bureau/ConsultantITBusiness/healthplatform/t1d-command-center\" status --short)",
+      "Bash(git -C \"/c/Users/osali/OneDrive/Bureau/ConsultantITBusiness/healthplatform/t1d-command-center\" ls-files)",
+      "Bash(git -C \"/c/Users/osali/OneDrive/Bureau/ConsultantITBusiness/healthplatform/t1d-command-center\" rev-list --objects --all)",
+      "Bash(git -C \"/c/Users/osali/OneDrive/Bureau/ConsultantITBusiness/healthplatform/t1d-command-center\" cat-file --batch-check='%\\(objecttype\\) %\\(objectsize\\) %\\(objectname\\) %\\(rest\\)')",
+      "Bash(sort -rnk2)"
     ]
   }
 }
